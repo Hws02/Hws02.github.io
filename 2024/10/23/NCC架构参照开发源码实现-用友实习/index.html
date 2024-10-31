@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><title>NCC架构参照开发源码实现 | 首页</title><meta name="keywords" content="参照,用友,源码研究"><meta name="author" content="黄文胜,huangws2024@foxmail.com"><meta name="copyright" content="黄文胜"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#f7f9fe"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-touch-fullscreen" content="yes"><meta name="apple-mobile-web-app-title" content="NCC架构参照开发源码实现"><meta name="application-name" content="NCC架构参照开发源码实现"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="#f7f9fe"><meta property="og:type" content="article"><meta property="og:title" content="NCC架构参照开发源码实现"><meta property="og:url" content="https://hws02.github.io/2024/10/23/NCC%E6%9E%B6%E6%9E%84%E5%8F%82%E7%85%A7%E5%BC%80%E5%8F%91%E6%BA%90%E7%A0%81%E5%AE%9E%E7%8E%B0-%E7%94%A8%E5%8F%8B%E5%AE%9E%E4%B9%A0/index.html"><meta property="og:site_name" content="首页"><meta property="og:description" content="NCC架构参照开发源码实现 - 用友实习1. 参照在界面开发过程中，经常需要引用系统中已定义的数据场景，例如在编辑界面中弹出一个参照展示界面供选择数据。在开发过程中，常常重复使用相同的数据选择界面，例如单据上通常会引用组织。因此，提供一套统一的数据选择控件和服务可以显著减少业务开发的工作量。 在基于"><meta property="og:locale" content="zh-CN"><meta property="og:image" content="https://bu.dusays.com/2024/10/31/6722d69dc007a.jpg"><meta property="article:author" content="黄文胜"><meta property="article:tag" content="黄文胜, 博客, 技术, 编程, 学习笔记, 分享"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="https://bu.dusays.com/2024/10/31/6722d69dc007a.jpg"><meta name="description" content="NCC架构参照开发源码实现 - 用友实习1. 参照在界面开发过程中，经常需要引用系统中已定义的数据场景，例如在编辑界面中弹出一个参照展示界面供选择数据。在开发过程中，常常重复使用相同的数据选择界面，例如单据上通常会引用组织。因此，提供一套统一的数据选择控件和服务可以显著减少业务开发的工作量。 在基于"><link rel="shortcut icon" href="/favicon.ico"><link rel="canonical" href="https://hws02.github.io/2024/10/23/NCC%E6%9E%B6%E6%9E%84%E5%8F%82%E7%85%A7%E5%BC%80%E5%8F%91%E6%BA%90%E7%A0%81%E5%AE%9E%E7%8E%B0-%E7%94%A8%E5%8F%8B%E5%AE%9E%E4%B9%A0/"><link rel="preconnect" href="//cdn.cbd.int"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="xxx"/><meta name="baidu-site-verification" content="code-xxx"/><meta name="msvalidate.01" content="xxx"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.cbd.int/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/swiper/swiper.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><title>NCC架构参照开发源码实现 | 首页</title><meta name="keywords" content="参照,用友,源码研究"><meta name="author" content="黄文胜,huangws2024@foxmail.com"><meta name="copyright" content="黄文胜"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#f7f9fe"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-touch-fullscreen" content="yes"><meta name="apple-mobile-web-app-title" content="NCC架构参照开发源码实现"><meta name="application-name" content="NCC架构参照开发源码实现"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="#f7f9fe"><meta property="og:type" content="article"><meta property="og:title" content="NCC架构参照开发源码实现"><meta property="og:url" content="https://hws02.github.io/2024/10/23/NCC%E6%9E%B6%E6%9E%84%E5%8F%82%E7%85%A7%E5%BC%80%E5%8F%91%E6%BA%90%E7%A0%81%E5%AE%9E%E7%8E%B0-%E7%94%A8%E5%8F%8B%E5%AE%9E%E4%B9%A0/index.html"><meta property="og:site_name" content="首页"><meta property="og:description" content="参照  在界面开发过程中，经常会出现需要引用系统中已定义的数据场景。在编辑界面通过弹出一个参照展示界面供选择参照来源数据。在开发过程中，会经常重复使用相同的 数据选择界面，例如单据上一般都会引用组织。因此需要提供一套统一的数据选择控件及服务，在业务单据开发时，只需要直接使用，减少业务开发的工作量。"><meta property="og:locale" content="zh-CN"><meta property="og:image" content="https://bu.dusays.com/2024/10/31/6722d69dc007a.jpg"><meta property="article:author" content="黄文胜"><meta property="article:tag" content="黄文胜, 博客, 技术, 编程, 学习笔记, 分享"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="https://bu.dusays.com/2024/10/31/6722d69dc007a.jpg"><meta name="description" content="参照  在界面开发过程中，经常会出现需要引用系统中已定义的数据场景。在编辑界面通过弹出一个参照展示界面供选择参照来源数据。在开发过程中，会经常重复使用相同的 数据选择界面，例如单据上一般都会引用组织。因此需要提供一套统一的数据选择控件及服务，在业务单据开发时，只需要直接使用，减少业务开发的工作量。"><link rel="shortcut icon" href="/favicon.ico"><link rel="canonical" href="https://hws02.github.io/2024/10/23/NCC%E6%9E%B6%E6%9E%84%E5%8F%82%E7%85%A7%E5%BC%80%E5%8F%91%E6%BA%90%E7%A0%81%E5%AE%9E%E7%8E%B0-%E7%94%A8%E5%8F%8B%E5%AE%9E%E4%B9%A0/"><link rel="preconnect" href="//cdn.cbd.int"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="xxx"/><meta name="baidu-site-verification" content="code-xxx"/><meta name="msvalidate.01" content="xxx"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.cbd.int/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/swiper/swiper.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
   linkPageTop: undefined,
   peoplecanvas: undefined,
   postHeadAiDescription: {"enable":true,"gptName":"AnZhiYu","mode":"local","switchBtn":false,"btnLink":"https://afdian.net/item/886a79d4db6711eda42a52540025c377","randomNum":3,"basicWordCount":1000,"key":"xxxx","Referer":"https://xx.xx/"},
@@ -12,7 +12,7 @@
   preloader: {"source":3},
   friends_vue_info: undefined,
   navMusic: true,
-  mainTone: undefined,
+  mainTone: {"mode":"api","api":"https://img2color-go.vercel.app/api?img=","cover_change":true},
   authorStatus: {"skills":["🤖️ 数码科技爱好者","🔍 分享与热心帮助","🔨 设计开发一条龙","🏃 脚踏实地行动派","🧱 团队小组发动机","🐔 蔡徐坤五年老粉","😭 Java应届黑奴"]},
   algolia: undefined,
   localSearch: undefined,
@@ -55,12 +55,12 @@
   configTitle: '首页',
   title: 'NCC架构参照开发源码实现',
   postAI: '',
-  pageFillDescription: 'NCC架构参照开发源码实现 - 用友实习, 1. 参照, 使用参照的业务场景, 参照分类, 表型参照, 列表参照, 单选模式, 多选模式, 树表型参照, 4. 参照的实现原理, 代码研究, 参照前端, YonBIP参照创建（应用注册）, 讲解思路, 具体思路, 参照创建（通过应用注册添加新参照）, 参照前端（React）, 参照后端（Java）-MVC模式讲解, 1. Tax_hws_serviceDefaultGridRefAction 参照类, RefMeta 存储的数据示例, DefaultGridRefAction, NCCAction, 具体流程, 1. 前端请求阶段, 2. 后端接收请求并初始化查询, 2.1 NCCAction.doAction() 作为操作入口, 2.2 执行 AbstractRefAction.execute() 处理查询条件, 3. 数据查询和处理阶段, 3.1 DefaultGridRefAction.processData() 生成查询 SQL, 3.2 NCGridRefDBProcessor.queryRefPks() 查询符合条件的主键, 3.3 NCGridRefDBProcessor.getRowsByPks() 查询参照数据行, 3.4 NCGridRefDBProcessor.constructResult() 封装结果, 4. 数据权限、多语言处理阶段, 5. 返回结果给前端, 6. 前端展示结果架构参照开发源码实现用友实习参照在界面开发过程中经常需要引用系统中已定义的数据场景例如在编辑界面中弹出一个参照展示界面供选择数据在开发过程中常常重复使用相同的数据选择界面例如单据上通常会引用组织因此提供一套统一的数据选择控件和服务可以显著减少业务开发的工作量在基于表单模板进行开发时框架需要一套标准的数据选择控件以便于动态控制这样当需要引用数据时只需使用统一的前端控件即可完成数据选择而不需要额外开发为此在中提供了统一公共的数据选择控件和服务框架简称为参照参照管理管理各个领域服务中注册的参照信息提供参照的查询编辑新增等功能简单来说一个实体依赖于另一个实体的数据另一个实体即为参照参照主要用于其他页面的数据选择参照就是对其他实体信息的参照和对照高级版参照前端通过配置属性控制参照的界面显示后端拼接查询参数数据的具体语句使用参照的业务场景参照的使用通常满足以下场景需求第一用户需要填写的数据不可随意输入数据已经存在于数据库中第二这些数据通常为一些常用且固定的数据例如组织部门人员岗位等第三用户在选择数据时需进行权限过滤防止越权选择自己无权限管理的数据参照分类表型参照后端类需继承类前端配置中需加入以支持一次性数据请求列表参照支持模式单选多选多选模式下拉样式参照树形参照后端类需继承类前端配置中需加入和的设置以支持一次性数据请求单选模式支持用户在树形结构中选择单个参照项多选模式支持用户在树形结构中选择多个参照项树表型参照树表型参照是树形参照和表型参照的结合提供更灵活的数据选择方式实现上需要两次请求第一次请求走树形参照用于获取树状结构数据第二次请求走表形参照用于获取表格展示的数据参照的实现原理参照的数据源来自数据库中的表该表存储了各个参照的数据定义及元数据为系统的参照功能提供了基础数据支持代码研究接口该接口定义了一个方法强制要求实现类必须实现方法处理请求并返回响应结果是一个抽象类提供了处理请求的标准化流程该类实现了一个接口包含请求参数处理操作执行和异常处理等核心逻辑用来存储操作码默认构造函数检查数据权限确保用户可以执行该操作核心方法处理请求执行制定操作存储解析后的请求参数存储操作执行后的结果获取请求参数执行前的预处理如果失败就返回执行核心逻辑操作失败后的处理异常处理返回执行结果在操作失败后提供子类重写在操作成功后提供子类重写操作执行前的预处理默认返回值允许操作执行子类可重写抽象方法子类必须实现这个方法用于定义具体操作的执行逻辑方法获取获取从请求中获取参数并转换为指定类型的对象获取参数类型默认返回获取处理业务异常根据不同类型的异常返回相应的错误信息处理不同类型的异常处理运行时异常处理未知异常方法生成器用于拼接语句中后的条件语句设置后条件语句中占位符对应的真实数据为了防止注入设置语句中的内容实现排序抽象的引用动作类继承了并实现了接口负责数据引用查询的操作无参构造执行引用查询操作请求对象查询参数查询结果异常如果显示常用数据如果没有指定主键设置主键初始化分页信息初始化单位主键处理并引用返回结果获取数据权限列字段如果未指定则返回引用源数据的主键字段获取额外的条件拼接语句中后的条件语句获取额外的参数设置后条件语句中占位符对应的真实数据为了防止注入获取引用的获取语言资源抽象方法子类必须实现该方法用于获取引用元数据获取构建器这是一个工厂方法返回构造器负责根据构建查询语句初始化单位主键处理数据多语言翻译处理通过中的多语言配置设置不同语言的显示值保证参照名称在不同语言环境下能正确展示用于枚举值的多语言处理对于枚举类型的字段系统通过多语言映射表返回相应语言的值确保参照数据中的枚举字段多语言化设置查询条件的值获取构造器初始化处理器根据条件查询参照主键处理查询出的参照主键根据主键查询所有所需的字段处理最后查询出的结果集构造返回结果返回数据参照前端点击事件参照表格后返回的对象参照创建应用注册讲解思路模型层视图层组件前端组件控制器层具体思路参照创建通过应用注册添加新参照进入模板设置页面选择参照组件添加到模板中并设置数据编码以及参照标题点击新参照组件选择高级属性编辑设置参照类型在弹窗中选择参照保存之后点击新参照组件出现弹窗就可以选择对应的参照对象实现新参照生成参照前端参照前端的相关属性配置前端主要设置了参照的相关属性包括多余配置领域模块名默认语言多语文件选择生成的参照类型表型参照树形参照树表型参照为参照标题名字是指参照输入框的占位提示文字即在输入框中还未输入任何内容时会显示的提示文本定义了参照弹窗中表格的列配置决定了弹窗中展示的数据列和它们的顺序这个配置通常与我们的业务需要相关业务需要列显示什么字段就进行配置是后端接口路径用于从后端获取参照数据当参照组件加载时系统会使用这个发送请求以获得可以选择的具体数据列表编码名称用于定义表格列的显示名称对应后端数据返回的字段名决定了表格中展示的数据源参照后端模式讲解参照类类是整个参照功能的入口类继承自该类用于处理用户从前端触发的参照请求并生成查询参照数据的关键元数据在这个类中最核心的部分是方法它构建并返回对象表示参照的元数据定义核心方法是的核心方法负责构建并返回参照元数据该对象包含了参照所需的所有信息如字段名表名主键等这些信息用于后续的查询和数据展示包括以下几部分编码字段是表示在表格中展示的每条记录的编码字段名称字段是对应表格中展示的记录名称字段主键字段是这是数据库表的主键字段用于标识每条记录表名是表示从数据库中查询的表名多语言支持通过表明参照支持多语言主要作用定义当前参照的元数据包括参照表的名称参照字段编码名称主键以及是否支持多语言通过返回为的核心查询逻辑提供必要的元数据信息配置数据权限控制和是否显示被停用数据等业务规则如和存储的数据示例是一个抽象类继承自它为表格参照功能提供了默认的实现中定义了参照功能的几个核心方法帮助处理参照的查询逻辑尤其是通过方法完成对数据的查询与处理是负责实际数据库查询的处理器它结合和生成语句执行查询并将结果封装成和返回对象定义参照功能的数据结构如字段表名等方法是整个数据查询的核心步骤它负责通过进行查询构造执行查询处理主键与字段数据最后返回一个查询结果集职责执行查询逻辑根据中返回的以及前端传递的查询条件生成查询并执行查询数据处理通过数据库处理器进行主键查询字段查询并进一步处理查询出的数据返回查询结果最终将处理后的参照数据封装为对象返回给前端核心处理逻辑类获取构造器是一个接口负责生成查询语句在这里我们通过方法获取构造器对象包含了前端传递的查询条件如关键字分页信息过滤条件这些条件会用于生成查询通过的数据生成最终执行的查询语句处理条件拼接排序等复杂的操作初始化处理器是一个用于执行数据库查询的处理器它会结合元数据和生成查询调用会返回当前参照的元数据信息如字段名主键表名等用于生成用于构造查询的实际语句通过将和传入处理器能够构建出最终要执行的查询根据条件查询参照主键理器通过调用方法根据中的条件查询参照数据的主键返回一个主键数组表示数据库中符合查询条件的记录的主键值处理查询出的参照主键通过调用方法进一步处理查询出来的主键参照过滤处理特定的业务逻辑处理完之后返回一个更新后的主键数组根据主键查询所有所需的字段通过主键数组调用从数据库中查询每条记录的所有字段信息返回值是一个数组每个代表一个查询结果的行包含所有所需的字段如等处理最后查询出的结果集进一步处理查询出的数据行类似于处理主键的步骤对数据行进行额外的处理或过滤比如多语言处理字段格式化等处理完成回返回一个数组构造返回结果返回数据调用方法将处理过的和分页信息打包成一个对象是最终返回给前端的数据结构包含了查询的结果集和分页信息提供了很多参照功能中的基础逻辑如数据权限多语言处理构建等它通过接口实现查询构建并为参照功能提供了灵活的扩展接口会使用中存储的条件包括组织集团和其他过滤条件这些都是由入口类或设置的抽象的引用动作类继承了并实现了接口负责数据引用查询的操作控制是否展示被停用的数据负责数据权限的字段系统可以根据用户角色或组织权限来过滤参照数据无参构造执行引用查询操作请求对象查询参数查询结果异常将通用参数转换为从而可以访问参照数据特定的查询条件判断是否显示常用数据通过判断用户是否选择了查看常用数据即常用参照如果显示常用数据开始构建常用参照的系统会使用以便构建常用参照的查询确保常用数据查询能使用适当的构建规则设置单位主键组织过滤系统调用方法执行具体的参照数据查询并返回查询结果该对象包含查询后的数据和分页信息获取额外的条件拼接语句中后的条件语句获取额外的参数设置后条件语句中占位符对应的真实数据为了防止注入和提供了数据权限控制的组织和集团过滤条件入口类通过方法将这些组织集团作为条件传入确保只有当前用户所属的组织和集团数据可以被查询到获取构建器这是一个工厂方法返回构造器负责根据构建查询语句多语言翻译处理通过中的多语言配置设置不同语言的显示值保证参照名称在不同语言环境下能正确展示用于枚举值的多语言处理对于枚举类型的字段系统通过多语言映射表返回相应语言的值确保参照数据中的枚举字段多语言化和方法会进一步调用的权限和多语言处理逻辑多语言处理是一个抽象基础类定义了通用的操作流程和错误处理机制为具体的业务逻辑类例如参照功能类提供支持提供了执行业务操作的通用流程并定义了方法作为所有具体操作类的执行入口在参照功能中这个类的主要作用包括以下几方面标准化的操作流程定义了操作执行的通用流程包含参数获取预处理实际执行后处理和异常处理权限校验方法用于数据权限校验确保只有符合权限的数据可以被访问异常处理和处理不同类型的异常确保系统稳定运行并将合适的错误信息返回给用户是一个抽象类提供了处理请求的标准化流程该类实现了一个接口包含请求参数处理操作执行和异常处理等核心逻辑用来存储操作码默认构造函数检查数据权限确保用户可以执行该操作核心方法处理请求执行制定操作存储解析后的请求参数存储操作执行后的结果获取请求参数执行前的预处理如果失败就返回执行核心逻辑操作失败后的处理异常处理返回执行结果在操作失败后提供子类重写在操作成功后提供子类重写操作执行前的预处理默认返回值允许操作执行子类可重写抽象方法子类必须实现这个方法用于定义具体操作的执行逻辑方法获取获取从请求中获取参数并转换为指定类型的对象获取参数类型默认返回获取处理业务异常根据不同类型的异常返回相应的错误信息处理不同类型的异常处理运行时异常处理未知异常方法整个参照流程包括前端发送查询条件后端接收和解析条件生成查询并执行数据库查询数据权限和多语言处理最终将结果返回前端并展示在这一过程中涉及多类协同工作确保查询高效灵活同时满足权限和多语言需求具体流程前端请求阶段用户在前端页面上操作可能选择某个字段的参照功能例如选择某个服务项目页面会展示一个参照弹窗允许用户根据关键字搜索分页浏览或选择组织等条件过滤数据用户输入的查询条件会通过请求或其他方式发送到后端后端接收请求并初始化查询作为操作入口是后端接收请求的入口类通过方法接收用户的查询请求调用方法读取并解析前端传来的查询条件将其封装为对象包含查询关键字分页信息过滤条件如组织主键过滤等执行处理查询条件在中调用方法此时进入类中实现的方法方法负责解析中的查询条件判断是否显示常用数据如果是则会附加的构建逻辑检查并设置组织主键为参照查询增加组织过滤初始化用于分页显示数据最终方法调用方法正式进入参照数据的查询处理阶段数据查询和处理阶段生成查询方法首先会获取构建器该对象生成参照功能的语句负责生成查询并调用数据库查询处理类执行查询查询符合条件的主键在中方法会根据查询条件生成语句判断是否需要进行全文检索如需要则调用否则按页面分页信息决定调用或执行查询后返回符合条件的主键数组查询参照数据行根据返回的主键数组会执行进一步的查询获取每条参照数据的完整行结果以的格式返回其中包含了每一行的编码名称主键等字段信息系统会将转换为格式这是前端更适合使用的数据格式封装结果方法将查询到的数据行封装为对象它还会处理分页信息如计算总页数设置等确保数据分页返回符合用户请求数据权限多语言处理阶段在中数据行会进一步经过权限控制和多语言处理确保符合用户权限的控制要求会处理多语言转换则进行主键过滤和权限控制确保只有符合权限的数据行被返回返回结果给前端最终返回对象将该结果封装并返回给前端前端接收数据该数据包含查询到的参照数据行和分页信息前端展示结果前端接收到后端返回的参照数据将其展示在参照弹窗中用户可以浏览分页内容查看参照的名称和编码等字段用户可以进一步选择或确认某个参照值从而完成整个参照功能的交互流程',
+  pageFillDescription: '参照, 参照的业务场景, 参照分类(样式截图), 4. 参照的实现原理, 代码研究, 参照前端, YonBIP参照创建（应用注册）, 讲解思路, 具体思路, 参照创建（通过应用注册添加新参照）, 参照前端（React）, 参照类Tax_hws_serviceDefaultGridRefAction, DefaultGridRefAction, AbstractRefAction.java, NCGridRefDBProcessor, 具体流程, 1. 前端请求阶段, 2. 后端接收请求并初始化查询, 2.1 NCCAction.doAction() 作为操作入口, 2.2 执行 AbstractRefAction.execute() 处理查询条件, 3. 数据查询和处理阶段, 3.1 DefaultGridRefAction.processData() 生成查询 SQL, 3.2 NCGridRefDBProcessor.queryRefPks() 查询符合条件的主键, 3.3 NCGridRefDBProcessor.getRowsByPks() 查询参照数据行, 3.4 NCGridRefDBProcessor.constructResult() 封装结果, 4. 数据权限、多语言处理阶段, 5. 返回结果给前端, 6. 前端展示结果参照在界面开发过程中经常会出现需要引用系统中已定义的数据场景在编辑界面通过弹出一个参照展示界面供选择参照来源数据在开发过程中会经常重复使用相同的数据选择界面例如单据上一般都会引用组织因此需要提供一套统一的数据选择控件及服务在业务单据开发时只需要直接使用减少业务开发的工作量其次是基于表单模版进行开发时框架需要一套标准的数据选择控件已便于动态的进行控制当需要引用数据时使用统一的前端控件即可完成数据的选择而不需要开发为此在中提供了统一公共的数据选择控件及服务框架简称为参照参照管理即管理各个领域服务中注册的参照信息提供各个领域的参照查询编辑新增功能简单来说一个实体依赖另外一个实体的数据另外一个实体就叫参照参照是主要用于其他页面选择使用的参照就是对其他实体信息的参照和对照高级版参照前端通过配置属性控制参照的界面显示后端拼接查询参数数据的具体语句参照的业务场景使用参照的场景通常满足以下几个要求第一用户需要填写的数据不可以随意填写且已经存在于数据库第二这些数据是一些常用和固定的数据如组织部门人员岗位等第三用户在选择数据时需要进行权限过滤以防止用户越权选择自己无权管理的数据参照分类样式截图表型参照后端类需继承类前端配置中需加入的配置一次请求列表参照单多选多选单选下拉样式参照树形参照后端类需继承类前端配置中需加入和的配置一次请求单选多选树表型参照实际上是树形参照和表形参照的集合两次请求一次请求走树形参照一次请求走表形参照参照的实现原理参照所在数据库表为代码研究接口该接口定义了一个方法强制要求实现类必须实现方法处理请求并返回响应结果是一个抽象类提供了处理请求的标准化流程该类实现了一个接口包含请求参数处理操作执行和异常处理等核心逻辑用来存储操作码默认构造函数检查数据权限确保用户可以执行该操作核心方法处理请求执行制定操作存储解析后的请求参数存储操作执行后的结果获取请求参数执行前的预处理如果失败就返回执行核心逻辑操作失败后的处理异常处理返回执行结果在操作失败后提供子类重写在操作成功后提供子类重写操作执行前的预处理默认返回值允许操作执行子类可重写抽象方法子类必须实现这个方法用于定义具体操作的执行逻辑方法获取获取从请求中获取参数并转换为指定类型的对象获取参数类型默认返回获取处理业务异常根据不同类型的异常返回相应的错误信息处理不同类型的异常处理运行时异常处理未知异常方法生成器用于拼接语句中后的条件语句设置后条件语句中占位符对应的真实数据为了防止注入设置语句中的内容实现排序抽象的引用动作类继承了并实现了接口负责数据引用查询的操作无参构造执行引用查询操作请求对象查询参数查询结果异常如果显示常用数据如果没有指定主键设置主键初始化分页信息初始化单位主键处理并引用返回结果获取数据权限列字段如果未指定则返回引用源数据的主键字段获取额外的条件拼接语句中后的条件语句获取额外的参数设置后条件语句中占位符对应的真实数据为了防止注入获取引用的获取语言资源抽象方法子类必须实现该方法用于获取引用元数据获取构建器这是一个工厂方法返回构造器负责根据构建查询语句初始化单位主键处理数据多语言翻译处理通过中的多语言配置设置不同语言的显示值保证参照名称在不同语言环境下能正确展示用于枚举值的多语言处理对于枚举类型的字段系统通过多语言映射表返回相应语言的值确保参照数据中的枚举字段多语言化设置查询条件的值获取构造器初始化处理器根据条件查询参照主键处理查询出的参照主键根据主键查询所有所需的字段处理最后查询出的结果集构造返回结果返回数据参照前端点击事件参照表格后返回的对象参照创建应用注册讲解思路模型层视图层组件前端组件控制器层具体思路参照创建通过应用注册添加新参照进入模板设置页面选择参照组件添加到模板中并设置数据编码以及参照标题点击新参照组件选择高级属性编辑设置参照类型在弹窗中选择参照保存之后点击新参照组件出现弹窗就可以选择对应的参照对象实现新参照生成参照前端参照前端的相关属性配置前端主要设置了参照的相关属性包括多余配置领域模块名默认语言多语文件选择生成的参照类型表型参照树形参照树表型参照为参照标题名字是指参照输入框的占位提示文字即在输入框中还未输入任何内容时会显示的提示文本定义了参照弹窗中表格的列配置决定了弹窗中展示的数据列和它们的顺序这个配置通常与我们的业务需要相关业务需要列显示什么字段就进行配置是后端接口路径用于从后端获取参照数据当参照组件加载时系统会使用这个发送请求以获得可以选择的具体数据列表编码名称用于定义表格列的显示名称对应后端数据返回的字段名决定了表格中展示的数据源参照后端模式讲解参照类类是整个参照功能的入口类继承自该类主要用于处理用户从前端触发的参照请求并生成查询参照数据的关键元数据在这个类中我们看到最核心的部分是方法它构建并返回对象表示参照的元数据定义这个方法是的核心方法负责构建并返回参照元数据这个对象包含了参照所需的所有信息如字段名表名主键等这些信息用于后续的查询和数据展示包括以下几部分编码字段是表示在表格中展示的每条记录的编码字段名称字段是对应表格中展示的记录名称字段主键字段是这是数据库表的主键字段用于标识每条记录表名是表示从数据库中查询的表名多语言支持通过说明参照支持多语言主要作用定义当前参照的元数据包括参照表的名称参照字段编码名称主键以及是否支持多语言通过返回为的核心查询逻辑提供必要的元数据信息配置数据权限控制和是否显示被停用数据等业务规则如和存储的数据示例是一个抽象类继承自它为表格参照功能提供了默认的实现中定义了参照功能的几个核心方法帮助处理参照的查询逻辑尤其是通过方法完成对数据的查询与处理是负责实际数据库查询的处理器它结合和生成语句执行查询并将结果封装成和返回对象定义参照功能的数据结构如字段表名等方法是整个数据查询的核心步骤它负责通过进行查询构造执行查询处理主键与字段数据最后返回一个查询结果集职责执行查询逻辑根据中返回的以及前端传递的查询条件生成查询并执行查询数据处理通过数据库处理器进行主键查询字段查询并进一步处理查询出的数据返回查询结果最终将处理后的参照数据封装为对象返回给前端核心处理逻辑类获取构造器是一个接口负责生成查询语句在这里我们通过方法获取构造器对象包含了前端传递的查询条件如关键字分页信息过滤条件这些条件会用于生成查询通过的数据生成最终执行的查询语句处理条件拼接排序等复杂的操作初始化处理器是一个用于执行数据库查询的处理器它会结合元数据和生成查询调用会返回当前参照的元数据信息如字段名主键表名等用于生成用于构造查询的实际语句通过将和传入处理器能够构建出最终要执行的查询根据条件查询参照主键理器通过调用方法根据中的条件查询参照数据的主键返回一个主键数组表示数据库中符合查询条件的记录的主键值处理查询出的参照主键通过调用方法进一步处理查询出来的主键参照过滤处理特定的业务逻辑处理完之后返回一个更新后的主键数组根据主键查询所有所需的字段通过主键数组调用从数据库中查询每条记录的所有字段信息返回值是一个数组每个代表一个查询结果的行包含所有所需的字段如等处理最后查询出的结果集进一步处理查询出的数据行类似于处理主键的步骤对数据行进行额外的处理或过滤比如多语言处理字段格式化等处理完成回返回一个数组构造返回结果返回数据调用方法将处理过的和分页信息打包成一个对象是最终返回给前端的数据结构包含了查询的结果集和分页信息提供了很多参照功能中的基础逻辑如数据权限多语言处理构建等它通过接口实现查询构建并为参照功能提供了灵活的扩展接口会使用中存储的条件包括组织集团和其他过滤条件这些都是由入口类或设置的抽象的引用动作类继承了并实现了接口负责数据引用查询的操作控制是否展示被停用的数据负责数据权限的字段系统可以根据用户角色或组织权限来过滤参照数据无参构造执行引用查询操作请求对象查询参数查询结果异常将通用参数转换为从而可以访问参照数据特定的查询条件判断是否显示常用数据通过判断用户是否选择了查看常用数据即常用参照如果显示常用数据开始构建常用参照的系统会使用以便构建常用参照的查询确保常用数据查询能使用适当的构建规则设置单位主键组织过滤系统调用方法执行具体的参照数据查询并返回查询结果该对象包含查询后的数据和分页信息获取额外的条件拼接语句中后的条件语句获取额外的参数设置后条件语句中占位符对应的真实数据为了防止注入和提供了数据权限控制的组织和集团过滤条件入口类通过方法将这些组织集团作为条件传入确保只有当前用户所属的组织和集团数据可以被查询到获取构建器这是一个工厂方法返回构造器负责根据构建查询语句多语言翻译处理通过中的多语言配置设置不同语言的显示值保证参照名称在不同语言环境下能正确展示用于枚举值的多语言处理对于枚举类型的字段系统通过多语言映射表返回相应语言的值确保参照数据中的枚举字段多语言化和方法会进一步调用的权限和多语言处理逻辑多语言处理是一个抽象基础类定义了通用的操作流程和错误处理机制为具体的业务逻辑类例如参照功能类提供支持提供了执行业务操作的通用流程并定义了方法作为所有具体操作类的执行入口在参照功能中这个类的主要作用包括以下几方面标准化的操作流程定义了操作执行的通用流程包含参数获取预处理实际执行后处理和异常处理权限校验方法用于数据权限校验确保只有符合权限的数据可以被访问异常处理和处理不同类型的异常确保系统稳定运行并将合适的错误信息返回给用户是一个抽象类提供了处理请求的标准化流程该类实现了一个接口包含请求参数处理操作执行和异常处理等核心逻辑用来存储操作码默认构造函数检查数据权限确保用户可以执行该操作核心方法处理请求执行制定操作存储解析后的请求参数存储操作执行后的结果获取请求参数执行前的预处理如果失败就返回执行核心逻辑操作失败后的处理异常处理返回执行结果在操作失败后提供子类重写在操作成功后提供子类重写操作执行前的预处理默认返回值允许操作执行子类可重写抽象方法子类必须实现这个方法用于定义具体操作的执行逻辑方法获取获取从请求中获取参数并转换为指定类型的对象获取参数类型默认返回获取处理业务异常根据不同类型的异常返回相应的错误信息处理不同类型的异常处理运行时异常处理未知异常方法是参照功能中具体负责执行数据库操作的核心类它处理参照数据的查询结果处理等功能这个类的主要任务是通过与和协作生成查询语句并执行它最终返回参照数据这类的主要方法包括和根据用户输入的查询条件如关键字过滤条件等生成查询主键的语句并执行返回符合条件的主键数组判断是否进行全文检索如果需要全文检索通过方法生成基于关键字的查询结果非全文检索系统会根据分页信息来决定是查询所有主键调用还是根据分页信息分段查询调用当前页码为时查全部数据根据分页信息分段查询返回查询到的主键设置最大行数生成查询主键的语句用于从数据库中获取符合条件的主键数据根据中定义的表名和主键字段生成基础查询如果查询条件中有搜索主键系统会根据主键来过滤和方法分别用于生成条件和排序参照数据结构定义和用户查询条件构建基础查询参照主键参照表名如果有搜索主键添加过滤条件删除最后一个逗号生成条件和排序条件返回生成的查询语句根据主键数组查询对应的参照数据行并将数据封装为返回首先根据数组构建查询通过查询数据库中的实际数据查询结果为格式然后系统会将其转换为前端展示的格式方便前端展示通过这个服务对象调用数据库执行根据主键过滤的查询并返回数据库中存储的参照数据行根据主键查询具体的数据行是适合前端展示的数据格式包含了参照的等信息将转换为供前端使用的数据格式将查询结果封装为对象并处理分页信息将其返回给调用者根据数据计算分页信息并构建返回的结果通过来设置分页总页数和当前页的信息创建查询结果对象设置查询结果中的行数据获取查询参数中的分页信息计算总页数确保至少有一页根据总记录数和每页记录数计算总页数设置分页信息中的总页数设置查询结果中的分页信息是最终返回给调用者的数据对象它包含了查询的行数据以及分页信息整个参照流程包括前端发送查询条件后端接收和解析条件生成查询并执行数据库查询数据权限和多语言处理最终将结果返回前端并展示在这一过程中涉及多类协同工作确保查询高效灵活同时满足权限和多语言需求具体流程前端请求阶段用户在前端页面上操作可能选择某个字段的参照功能例如选择某个服务项目页面会展示一个参照弹窗允许用户根据关键字搜索分页浏览或选择组织等条件过滤数据用户输入的查询条件会通过请求或其他方式发送到后端后端接收请求并初始化查询作为操作入口是后端接收请求的入口类通过方法接收用户的查询请求调用方法读取并解析前端传来的查询条件将其封装为对象包含查询关键字分页信息过滤条件如组织主键过滤等执行处理查询条件在中调用方法此时进入类中实现的方法方法负责解析中的查询条件判断是否显示常用数据如果是则会附加的构建逻辑检查并设置组织主键为参照查询增加组织过滤初始化用于分页显示数据最终方法调用方法正式进入参照数据的查询处理阶段数据查询和处理阶段生成查询方法首先会获取构建器该对象生成参照功能的语句负责生成查询并调用数据库查询处理类执行查询查询符合条件的主键在中方法会根据查询条件生成语句判断是否需要进行全文检索如需要则调用否则按页面分页信息决定调用或执行查询后返回符合条件的主键数组查询参照数据行根据返回的主键数组会执行进一步的查询获取每条参照数据的完整行结果以的格式返回其中包含了每一行的编码名称主键等字段信息系统会将转换为格式这是前端更适合使用的数据格式封装结果方法将查询到的数据行封装为对象它还会处理分页信息如计算总页数设置等确保数据分页返回符合用户请求数据权限多语言处理阶段在中数据行会进一步经过权限控制和多语言处理确保符合用户权限的控制要求会处理多语言转换则进行主键过滤和权限控制确保只有符合权限的数据行被返回返回结果给前端最终返回对象将该结果封装并返回给前端前端接收数据该数据包含查询到的参照数据行和分页信息前端展示结果前端接收到后端返回的参照数据将其展示在参照弹窗中用户可以浏览分页内容查看参照的名称和编码等字段用户可以进一步选择或确认某个参照值从而完成整个参照功能的交互流程',
   isPost: true,
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2024-10-31 09:44:02',
+  postUpdate: '2024-10-31 16:21:35',
   postMainColor: '',
 }</script><noscript><style type="text/css">
   #nav {
@@ -227,84 +227,74 @@ if (true) {
     "key": "df245676fb434a0691ead1c63341cd94"
   }
 }
-</script><link rel="stylesheet" href="https://widget.qweather.net/simple/static/css/he-simple.css?v=1.4.0"/><script src="https://widget.qweather.net/simple/static/js/he-simple.js?v=1.4.0"></script></span><div class="mask-name-container"><div id="name-container"><a id="page-name" href="javascript:anzhiyu.scrollToDest(0, 500)">PAGE_NAME</a></div></div><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/archives/"><span> 隧道</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/tags/"><span> 标签</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/categories/"><span> 分类</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/comments/"><span> 留言板</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/about/"><span> 关于本人</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="javascript:toRandomPost()"><span> 随便逛逛</span></a></div></div></div><div id="nav-right"><div class="nav-button only-home" id="travellings_button" title="随机前往一个开往项目网站"><a class="site-page" onclick="anzhiyu.totraveling()" title="随机前往一个开往项目网站" href="javascript:void(0);" rel="external nofollow" data-pjax-state="external"><i class="anzhiyufont anzhiyu-icon-train"></i></a></div><div class="nav-button" id="randomPost_button"><a class="site-page" onclick="toRandomPost()" title="随机前往一个文章" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-dice"></i></a></div><input id="center-console" type="checkbox"/><label class="widget" for="center-console" title="中控台" onclick="anzhiyu.switchConsole();"><i class="left"></i><i class="widget center"></i><i class="widget right"></i></label><div id="console"><div class="console-card-group-reward"><ul class="reward-all console-card"><li class="reward-item"><a href="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-weichat.png" target="_blank"><img class="post-qr-code-img" alt="微信" src="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-weichat.png"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-alipay.png" target="_blank"><img class="post-qr-code-img" alt="支付宝" src="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-alipay.png"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div><div class="console-card-group"><div class="console-card-group-left"><div class="console-card" id="card-newest-comments"><div class="card-content"><div class="author-content-item-tips">互动</div><span class="author-content-item-title"> 最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div></div><div class="console-card-group-right"><div class="console-card tags"><div class="card-content"><div class="author-content-item-tips">兴趣点</div><span class="author-content-item-title">寻找你感兴趣的领域</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/Java/" style="font-size: 1.05rem;">Java<sup>10</sup></a><a href="/tags/MySQL/" style="font-size: 1.05rem;">MySQL<sup>1</sup></a><a href="/tags/Nacos/" style="font-size: 1.05rem;">Nacos<sup>1</sup></a><a href="/tags/%E5%8F%82%E7%85%A7/" style="font-size: 1.05rem;">参照<sup>1</sup></a><a href="/tags/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/" style="font-size: 1.05rem;">后端开发<sup>1</sup></a><a href="/tags/%E5%A4%A7%E5%AD%A6/" style="font-size: 1.05rem;">大学<sup>2</sup></a><a href="/tags/%E5%AD%A6%E4%B9%A0/" style="font-size: 1.05rem;">学习<sup>2</sup></a><a href="/tags/%E5%AE%9E%E4%B9%A0/" style="font-size: 1.05rem;">实习<sup>2</sup></a><a href="/tags/%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91/" style="font-size: 1.05rem;">接口开发<sup>1</sup></a><a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 1.05rem;">数据库<sup>6</sup></a><a href="/tags/%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6/" style="font-size: 1.05rem;">源码研究<sup>1</sup></a><a href="/tags/%E7%94%9F%E6%B4%BB/" style="font-size: 1.05rem;">生活<sup>1</sup></a><a href="/tags/%E7%94%A8%E5%8F%8B/" style="font-size: 1.05rem;">用友<sup>2</sup></a><a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 1.05rem;">编程<sup>2</sup></a><a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 1.05rem;">面试<sup>9</sup></a></div></div><hr/></div></div><div class="console-card history"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-box-archiv"></i><span>文章</span></div><div class="card-archives"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/10/"><span class="card-archive-list-date">十月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">17</span><span>篇</span></div></a></li></ul></div><hr/></div></div></div><div class="button-group"><div class="console-btn-item"><a class="darkmode_switchbutton" title="显示模式切换" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-moon"></i></a></div><div class="console-btn-item" id="consoleHideAside" onclick="anzhiyu.hideAsideBtn()" title="边栏显示控制"><a class="asideSwitch"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></a></div><div class="console-btn-item on" id="consoleCommentBarrage" onclick="anzhiyu.switchCommentBarrage()" title="热评开关"><a class="commentBarrage"><i class="anzhiyufont anzhiyu-icon-message"></i></a></div><div class="console-btn-item" id="consoleMusic" onclick="anzhiyu.musicToggle()" title="音乐开关"><a class="music-switch"><i class="anzhiyufont anzhiyu-icon-music"></i></a></div><div class="console-btn-item" id="consoleKeyboard" onclick="anzhiyu.keyboardToggle()" title="快捷键开关"><a class="keyboard-switch"><i class="anzhiyufont anzhiyu-icon-keyboard"></i></a></div></div><div class="console-mask" onclick="anzhiyu.hideConsole()" href="javascript:void(0);"></div></div><div class="nav-button" id="nav-totop"><a class="totopbtn" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i><span id="percent" onclick="anzhiyu.scrollToDest(0,500)">0</span></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" title="切换"><i class="anzhiyufont anzhiyu-icon-bars"></i></a></div></div></div></nav><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original">原创</a><span class="post-meta-categories"><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-inbox post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%AE%9E%E4%B9%A0/" itemprop="url">实习</a></span><span class="article-meta tags"><a class="article-meta__tags" href="/tags/%E5%8F%82%E7%85%A7/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>参照</span></a><a class="article-meta__tags" href="/tags/%E7%94%A8%E5%8F%8B/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>用友</span></a><a class="article-meta__tags" href="/tags/%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>源码研究</span></a></span></div></div><h1 class="post-title" itemprop="name headline">NCC架构参照开发源码实现</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" itemprop="dateCreated datePublished" datetime="2024-10-23T06:24:28.000Z" title="发表于 2024-10-23 14:24:28">2024-10-23</time><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-history post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" itemprop="dateCreated datePublished" datetime="2024-10-31T01:44:02.255Z" title="更新于 2024-10-31 09:44:02">2024-10-31</time></span></div><div class="meta-secondline"><span class="post-meta-separator"></span><span class="post-meta-wordcount"><i class="anzhiyufont anzhiyu-icon-file-word post-meta-icon" title="文章字数"></i><span class="post-meta-label" title="文章字数">字数总计:</span><span class="word-count" title="文章字数">8.2k</span><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-clock post-meta-icon" title="阅读时长"></i><span class="post-meta-label" title="阅读时长">阅读时长:</span><span>33分钟</span></span><span class="post-meta-separator"></span><span id="" data-flag-title="NCC架构参照开发源码实现"><i class="anzhiyufont anzhiyu-icon-fw-eye post-meta-icon"></i><span class="post-meta-label" title="阅读量">阅读量:</span><span id="twikoo_visitors" title="访问量"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></span></span><span class="post-meta-separator">       </span><span class="post-meta-position" title="作者IP属地为南昌"><i class="anzhiyufont anzhiyu-icon-location-dot"></i>南昌</span><span class="post-meta-separator"></span><span class="post-meta-commentcount"><i class="anzhiyufont anzhiyu-icon-comments post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2024/10/23/NCC%E6%9E%B6%E6%9E%84%E5%8F%82%E7%85%A7%E5%BC%80%E5%8F%91%E6%BA%90%E7%A0%81%E5%AE%9E%E7%8E%B0-%E7%94%A8%E5%8F%8B%E5%AE%9E%E4%B9%A0/#post-comment" tabindex="-1"><span id="twikoo-count"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></span></a></span></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section><div id="post-top-cover"><img class="nolazyload" id="post-top-bg" src="https://bu.dusays.com/2024/10/31/6722d69dc007a.jpg"></div></header><main id="blog-container"><div class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container" itemscope itemtype="https://hws02.github.io/2024/10/23/NCC%E6%9E%B6%E6%9E%84%E5%8F%82%E7%85%A7%E5%BC%80%E5%8F%91%E6%BA%90%E7%A0%81%E5%AE%9E%E7%8E%B0-%E7%94%A8%E5%8F%8B%E5%AE%9E%E4%B9%A0/"><header><a class="post-meta-categories" href="/categories/%E5%AE%9E%E4%B9%A0/" itemprop="url">实习</a><a href="/tags/%E5%8F%82%E7%85%A7/" tabindex="-1" itemprop="url">参照</a><a href="/tags/%E7%94%A8%E5%8F%8B/" tabindex="-1" itemprop="url">用友</a><a href="/tags/%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6/" tabindex="-1" itemprop="url">源码研究</a><h1 id="CrawlerTitle" itemprop="name headline">NCC架构参照开发源码实现</h1><span itemprop="author" itemscope itemtype="http://schema.org/Person">黄文胜</span><time itemprop="dateCreated datePublished" datetime="2024-10-23T06:24:28.000Z" title="发表于 2024-10-23 14:24:28">2024-10-23</time><time itemprop="dateCreated datePublished" datetime="2024-10-31T01:44:02.255Z" title="更新于 2024-10-31 09:44:02">2024-10-31</time></header><h1 id="NCC架构参照开发源码实现-用友实习"><a href="#NCC架构参照开发源码实现-用友实习" class="headerlink" title="NCC架构参照开发源码实现 - 用友实习"></a>NCC架构参照开发源码实现 - 用友实习</h1><h2 id="1-参照"><a href="#1-参照" class="headerlink" title="1. 参照"></a>1. 参照</h2><p>在界面开发过程中，经常需要引用系统中已定义的数据场景，例如在编辑界面中弹出一个参照展示界面供选择数据。在开发过程中，常常重复使用相同的数据选择界面，例如单据上通常会引用组织。因此，提供一套统一的数据选择控件和服务可以显著减少业务开发的工作量。</p>
-<p>在基于表单模板进行开发时，框架需要一套标准的数据选择控件，以便于动态控制。这样，当需要引用数据时，只需使用统一的前端控件即可完成数据选择，而不需要额外开发。为此，在<code>yonbip</code>中提供了统一公共的数据选择控件和服务框架，简称为<strong>参照</strong>。</p>
-<p><strong>参照管理</strong>：管理各个领域服务中注册的参照信息，提供参照的查询、编辑、新增等功能。简单来说，一个实体依赖于另一个实体的数据，另一个实体即为参照，参照主要用于其他页面的数据选择。</p>
-<p>参照，就是对其他实体信息的参照和对照。</p>
-<p><strong>YonBIP高级版参照</strong>：</p>
+</script><link rel="stylesheet" href="https://widget.qweather.net/simple/static/css/he-simple.css?v=1.4.0"/><script src="https://widget.qweather.net/simple/static/js/he-simple.js?v=1.4.0"></script></span><div class="mask-name-container"><div id="name-container"><a id="page-name" href="javascript:anzhiyu.scrollToDest(0, 500)">PAGE_NAME</a></div></div><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/archives/"><span> 隧道</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/tags/"><span> 标签</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/categories/"><span> 分类</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/comments/"><span> 留言板</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/about/"><span> 关于本人</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="javascript:toRandomPost()"><span> 随便逛逛</span></a></div></div></div><div id="nav-right"><div class="nav-button only-home" id="travellings_button" title="随机前往一个开往项目网站"><a class="site-page" onclick="anzhiyu.totraveling()" title="随机前往一个开往项目网站" href="javascript:void(0);" rel="external nofollow" data-pjax-state="external"><i class="anzhiyufont anzhiyu-icon-train"></i></a></div><div class="nav-button" id="randomPost_button"><a class="site-page" onclick="toRandomPost()" title="随机前往一个文章" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-dice"></i></a></div><input id="center-console" type="checkbox"/><label class="widget" for="center-console" title="中控台" onclick="anzhiyu.switchConsole();"><i class="left"></i><i class="widget center"></i><i class="widget right"></i></label><div id="console"><div class="console-card-group-reward"><ul class="reward-all console-card"><li class="reward-item"><a href="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-weichat.png" target="_blank"><img class="post-qr-code-img" alt="微信" src="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-weichat.png"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-alipay.png" target="_blank"><img class="post-qr-code-img" alt="支付宝" src="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-alipay.png"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div><div class="console-card-group"><div class="console-card-group-left"><div class="console-card" id="card-newest-comments"><div class="card-content"><div class="author-content-item-tips">互动</div><span class="author-content-item-title"> 最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div></div><div class="console-card-group-right"><div class="console-card tags"><div class="card-content"><div class="author-content-item-tips">兴趣点</div><span class="author-content-item-title">寻找你感兴趣的领域</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/Java/" style="font-size: 1.05rem;">Java<sup>9</sup></a><a href="/tags/MySQL/" style="font-size: 1.05rem;">MySQL<sup>1</sup></a><a href="/tags/Nacos/" style="font-size: 1.05rem;">Nacos<sup>1</sup></a><a href="/tags/%E5%8F%82%E7%85%A7/" style="font-size: 1.05rem;">参照<sup>1</sup></a><a href="/tags/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/" style="font-size: 1.05rem;">后端开发<sup>1</sup></a><a href="/tags/%E5%A4%A7%E5%AD%A6/" style="font-size: 1.05rem;">大学<sup>2</sup></a><a href="/tags/%E5%AD%A6%E4%B9%A0/" style="font-size: 1.05rem;">学习<sup>1</sup></a><a href="/tags/%E5%AE%9E%E4%B9%A0/" style="font-size: 1.05rem;">实习<sup>1</sup></a><a href="/tags/%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91/" style="font-size: 1.05rem;">接口开发<sup>1</sup></a><a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 1.05rem;">数据库<sup>5</sup></a><a href="/tags/%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6/" style="font-size: 1.05rem;">源码研究<sup>1</sup></a><a href="/tags/%E7%94%9F%E6%B4%BB/" style="font-size: 1.05rem;">生活<sup>1</sup></a><a href="/tags/%E7%94%A8%E5%8F%8B/" style="font-size: 1.05rem;">用友<sup>2</sup></a><a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 1.05rem;">编程<sup>1</sup></a><a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 1.05rem;">面试<sup>9</sup></a></div></div><hr/></div></div><div class="console-card history"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-box-archiv"></i><span>文章</span></div><div class="card-archives"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/10/"><span class="card-archive-list-date">十月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">16</span><span>篇</span></div></a></li></ul></div><hr/></div></div></div><div class="button-group"><div class="console-btn-item"><a class="darkmode_switchbutton" title="显示模式切换" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-moon"></i></a></div><div class="console-btn-item" id="consoleHideAside" onclick="anzhiyu.hideAsideBtn()" title="边栏显示控制"><a class="asideSwitch"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></a></div><div class="console-btn-item on" id="consoleCommentBarrage" onclick="anzhiyu.switchCommentBarrage()" title="热评开关"><a class="commentBarrage"><i class="anzhiyufont anzhiyu-icon-message"></i></a></div><div class="console-btn-item" id="consoleMusic" onclick="anzhiyu.musicToggle()" title="音乐开关"><a class="music-switch"><i class="anzhiyufont anzhiyu-icon-music"></i></a></div><div class="console-btn-item" id="consoleKeyboard" onclick="anzhiyu.keyboardToggle()" title="快捷键开关"><a class="keyboard-switch"><i class="anzhiyufont anzhiyu-icon-keyboard"></i></a></div></div><div class="console-mask" onclick="anzhiyu.hideConsole()" href="javascript:void(0);"></div></div><div class="nav-button" id="nav-totop"><a class="totopbtn" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i><span id="percent" onclick="anzhiyu.scrollToDest(0,500)">0</span></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" title="切换"><i class="anzhiyufont anzhiyu-icon-bars"></i></a></div></div></div></nav><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original">原创</a><span class="post-meta-categories"><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-inbox post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%AE%9E%E4%B9%A0/" itemprop="url">实习</a></span><span class="article-meta tags"><a class="article-meta__tags" href="/tags/%E5%8F%82%E7%85%A7/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>参照</span></a><a class="article-meta__tags" href="/tags/%E7%94%A8%E5%8F%8B/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>用友</span></a><a class="article-meta__tags" href="/tags/%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>源码研究</span></a></span></div></div><h1 class="post-title" itemprop="name headline">NCC架构参照开发源码实现</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" itemprop="dateCreated datePublished" datetime="2024-10-23T06:24:28.000Z" title="发表于 2024-10-23 14:24:28">2024-10-23</time><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-history post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" itemprop="dateCreated datePublished" datetime="2024-10-31T08:21:35.811Z" title="更新于 2024-10-31 16:21:35">2024-10-31</time></span></div><div class="meta-secondline"><span class="post-meta-separator"></span><span class="post-meta-wordcount"><i class="anzhiyufont anzhiyu-icon-file-word post-meta-icon" title="文章字数"></i><span class="post-meta-label" title="文章字数">字数总计:</span><span class="word-count" title="文章字数">9.2k</span><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-clock post-meta-icon" title="阅读时长"></i><span class="post-meta-label" title="阅读时长">阅读时长:</span><span>37分钟</span></span><span class="post-meta-separator"></span><span id="" data-flag-title="NCC架构参照开发源码实现"><i class="anzhiyufont anzhiyu-icon-fw-eye post-meta-icon"></i><span class="post-meta-label" title="阅读量">阅读量:</span><span id="twikoo_visitors" title="访问量"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></span></span><span class="post-meta-separator">       </span><span class="post-meta-position" title="作者IP属地为南昌"><i class="anzhiyufont anzhiyu-icon-location-dot"></i>南昌</span><span class="post-meta-separator"></span><span class="post-meta-commentcount"><i class="anzhiyufont anzhiyu-icon-comments post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2024/10/23/NCC%E6%9E%B6%E6%9E%84%E5%8F%82%E7%85%A7%E5%BC%80%E5%8F%91%E6%BA%90%E7%A0%81%E5%AE%9E%E7%8E%B0-%E7%94%A8%E5%8F%8B%E5%AE%9E%E4%B9%A0/#post-comment" tabindex="-1"><span id="twikoo-count"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></span></a></span></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section><div id="post-top-cover"><img class="nolazyload" id="post-top-bg" src="https://bu.dusays.com/2024/10/31/6722d69dc007a.jpg"></div></header><main id="blog-container"><div class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container" itemscope itemtype="https://hws02.github.io/2024/10/23/NCC%E6%9E%B6%E6%9E%84%E5%8F%82%E7%85%A7%E5%BC%80%E5%8F%91%E6%BA%90%E7%A0%81%E5%AE%9E%E7%8E%B0-%E7%94%A8%E5%8F%8B%E5%AE%9E%E4%B9%A0/"><header><a class="post-meta-categories" href="/categories/%E5%AE%9E%E4%B9%A0/" itemprop="url">实习</a><a href="/tags/%E5%8F%82%E7%85%A7/" tabindex="-1" itemprop="url">参照</a><a href="/tags/%E7%94%A8%E5%8F%8B/" tabindex="-1" itemprop="url">用友</a><a href="/tags/%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6/" tabindex="-1" itemprop="url">源码研究</a><h1 id="CrawlerTitle" itemprop="name headline">NCC架构参照开发源码实现</h1><span itemprop="author" itemscope itemtype="http://schema.org/Person">黄文胜</span><time itemprop="dateCreated datePublished" datetime="2024-10-23T06:24:28.000Z" title="发表于 2024-10-23 14:24:28">2024-10-23</time><time itemprop="dateCreated datePublished" datetime="2024-10-31T08:21:35.811Z" title="更新于 2024-10-31 16:21:35">2024-10-31</time></header><ol>
+<li><h3 id="参照"><a href="#参照" class="headerlink" title="参照"></a>参照</h3></li>
+</ol>
+<p>在界面开发过程中，经常会出现需要引用系统中已定义的数据场景。在编辑界面通过弹出一个参照展示界面供选择参照来源数据。在开发过程中，会经常重复使用相同的 数据选择界面，例如单据上一般都会引用组织。因此需要提供一套统一的数据选择控件及服务，在业务单据开发时，只需要直接使用，减少业务开发的工作量。其次是基于表单模版进行开发时，框架需要一套标准的数据选择控件，已便于动态的进行控制。当需要引用数据时，使用统一的前端控件即可完成数据的选择，而不需要开发。为此，在yonbip中提供了统一公共的数据选择控件及服务框架，简称为参照。 参照管理，即管理各个领域服务中注册的参照信息，提供各个领域的参照查询、编辑、新增功能，简单来说，一个实体依赖另外一个实体的数据，另外一个实体就叫参照，参照是主要用于其他页面选择使用的。</p>
+<p>参照，就是对其他实体信息的参照和对照</p>
+<p>YonBIP高级版参照：</p>
 <ul>
-<li><p><strong>前端JS</strong>：通过配置属性控制参照的界面显示。</p>
-</li>
-<li><p><strong>后端Java</strong>：拼接查询参数数据的具体SQL语句。</p>
-</li>
-<li><ul>
-<li><h2 id="使用参照的业务场景"><a href="#使用参照的业务场景" class="headerlink" title="使用参照的业务场景"></a>使用参照的业务场景</h2></li>
-<li><p>参照的使用通常满足以下场景需求：</p>
-</li>
-<li><ul>
-<li><strong>第一</strong>：用户需要填写的数据不可随意输入，数据已经存在于数据库中。</li>
-<li><strong>第二</strong>：这些数据通常为一些常用且固定的数据，例如组织、部门、人员、岗位等。</li>
-<li><strong>第三</strong>：用户在选择数据时需进行权限过滤，防止越权选择自己无权限管理的数据。</li>
+<li>前端JS：通过配置属性控制参照的界面显示。</li>
+<li>后端Java：拼接查询参数数据的具体SQL语句。</li>
 </ul>
-</li>
-<li><h2 id="参照分类"><a href="#参照分类" class="headerlink" title="参照分类"></a>参照分类</h2></li>
-<li><h3 id="表型参照"><a href="#表型参照" class="headerlink" title="表型参照"></a>表型参照</h3></li>
-<li><ul>
-<li><strong>后端 Java</strong>：类需继承 <code>DefaultGridRefAction</code> 类。</li>
-<li><strong>前端 JS</strong>：配置中需加入 <code>ColumnConfig</code> 以支持一次性数据请求。</li>
+<ol>
+<li><h3 id="参照的业务场景"><a href="#参照的业务场景" class="headerlink" title="参照的业务场景"></a>参照的业务场景</h3></li>
+</ol>
+<p>使用参照的场景通常满足以下几个要求：</p>
+<ul>
+<li>第一，用户需要填写的数据不可以随意填写，且已经存在于数据库。</li>
+<li>第二，这些数据是一些常用和固定的数据，如组织、部门、人员、岗位等。</li>
+<li>第三，用户在选择数据时需要进行权限过滤，以防止用户越权选择自己无权管理的数据。</li>
 </ul>
+<ol>
+<li><h3 id="参照分类-样式截图"><a href="#参照分类-样式截图" class="headerlink" title="参照分类(样式截图)"></a>参照分类(样式截图)</h3></li>
+</ol>
+<ul>
+<li>表型参照<ul>
+<li><p>后端 Java 类需继承 DefaultGridRefAction 类，前端 JS 配置中需加入 ColumnConfig 的配置一次请求。</p>
 </li>
-<li><h4 id="列表参照"><a href="#列表参照" class="headerlink" title="列表参照"></a>列表参照</h4></li>
-<li><ul>
-<li><p><strong>支持模式</strong>：单选&#x2F;多选</p>
-<p><strong>多选模式</strong></p>
+<li><p>列表参照(单&#x2F;多选)</p>
 </li>
-</ul>
+<li><p>多选</p>
 </li>
-<li><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092285-1.png" alt="img"></p>
+<li><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=YWE3NDZjYjVkZDBlNmEwNWJhODAyMTVlMzBmOGFhNzFfU042WmV4WXlvN0RiYjRCbGgyeG9ERHZwdlhzTGNiUDhfVG9rZW46WHltd2JqdHVMb1RWSDd4OHpDY2NYTlhwbk9jXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
+</li>
+<li><p>单选</p>
+</li>
+<li><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=OTkzMmY1MjlmZjYxNzE2MzZkNDI0YWU0ZDA0N2U0N2FfcHRzcFQ1Y0ZHVFVFOGQ4R1c2ekExeU9ldmUzQjNSTG9fVG9rZW46RTUyeGJXUDRCb3FUaHN4ZVR4OWMxQk5ybkJnXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
 </li>
 </ul>
 </li>
 </ul>
 <p>下拉样式参照：</p>
-<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092286-2.png" alt="img"></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=YjQ4ZTFhNmJmYzJmYmE0YTNkODQ1NjljYjY4YmYxMjFfWGZiMVBBaXZvdGdOT2tmeW15cENrNkRrcGJTNmZCT1lfVG9rZW46SUlRbmJYUElkb2FyZDh4NEtKamNwMk9zblJnXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
 <ul>
-<li><p>树形参照</p>
+<li>树形参照<ul>
+<li>后端 Java 类需继承 DefaultTreeRefAction 类，前端 JS 配置中需加入 rootNode 和 TreeConfig 的配置一次请求。</li>
+</ul>
+</li>
+</ul>
+<p>单选</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=MGU5NGE1OTJmMTM2Nzk3OTJmNmIxZDEyMWIxZTZhNjFfdDkyU1JQZHpPMmFUN09QeVJpVDRDaEtNNFpISkI2Mm9fVG9rZW46RmptcWJTU1VQb2xEMGt4Sm9Bb2Nid0pnbjBkXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
+<p>多选</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjM5ZWI1OTM3ZTEyZGQzZjEyM2ZmYWQ0YmZiOWI3OGZfWE1ueldOTnplUEozQ0RUclZpZW5ZY3RyQUR1ZTU5NFhfVG9rZW46UUZ4Z2JJc0dHb0EzZ0d4Y1Vrb2NxWmY3bndmXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
 <ul>
-<li><strong>后端 Java</strong>：类需继承 <code>DefaultTreeRefAction</code> 类。</li>
-<li><strong>前端 JS</strong>：配置中需加入 <code>rootNode</code> 和 <code>TreeConfig</code> 的设置以支持一次性数据请求。</li>
-</ul>
-<h4 id="单选模式"><a href="#单选模式" class="headerlink" title="单选模式"></a>单选模式</h4><ul>
-<li>支持用户在树形结构中选择单个参照项。</li>
-</ul>
+<li>树表型参照<ul>
+<li><p>实际上是树形参照和表形参照的集合。两次请求，一次请求走树形参照 action，一次请求走表形参照 action。</p>
 </li>
-<li><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092286-3.png" alt="img"></p>
+<li><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTFiYWFmYTNjN2FlNDNjMDA4NzYwNjFkZjQ5NWIyYjRfd0ZxS0FId1JEdm1UNlZlWG1uN0tpWUV6S2ZpODFtUGRfVG9rZW46REpUSGJWZUdXbzBiakZ4a1d6RmN2bkVubnRlXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
 </li>
-</ul>
-<h4 id="多选模式"><a href="#多选模式" class="headerlink" title="多选模式"></a>多选模式</h4><ul>
-<li><p>支持用户在树形结构中选择多个参照项。<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092286-4.png" alt="img"></p>
-</li>
-<li><h4 id="树表型参照"><a href="#树表型参照" class="headerlink" title="树表型参照"></a>树表型参照</h4><ul>
-<li><p>树表型参照是树形参照和表型参照的结合，提供更灵活的数据选择方式。</p>
-</li>
-<li><p>实现上需要<strong>两次请求</strong>：</p>
-<ul>
-<li>第一次请求走树形参照 action，用于获取树状结构数据。</li>
-<li>第二次请求走表形参照 action，用于获取表格展示的数据。</li>
-</ul>
-<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092286-5.png" alt="img"></p>
-</li>
-<li><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092286-6.png" alt="img"></p>
+<li><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=MjA2ZjQyYTE4MDViNmUxODgzOGQ2NzY3OTljNjczNTdfMkRFbUJJUm1Mc2x3MjFNODVWR3BMNUVEWHZmWkNrQzJfVG9rZW46RDl4T2JoZU1tb25XeUF4M1YwQWNSRWZhbmlmXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
 </li>
 </ul>
 </li>
 </ul>
-<h3 id="4-参照的实现原理"><a href="#4-参照的实现原理" class="headerlink" title="4. 参照的实现原理"></a>4. 参照的实现原理</h3><ul>
-<li>参照的数据源来自数据库中的表：<strong>bd_refinfo</strong>。</li>
-<li>该表存储了各个参照的数据定义及元数据，为系统的参照功能提供了基础数据支持。</li>
-</ul>
-<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092286-7.png" alt="img"></p>
-<h3 id="代码研究"><a href="#代码研究" class="headerlink" title="代码研究"></a>代码研究</h3><p>ICommonAction.java（接口）</p>
+<h3 id="4-参照的实现原理"><a href="#4-参照的实现原理" class="headerlink" title="4. 参照的实现原理"></a>4. 参照的实现原理</h3><p>参照所在数据库表为：bd_refinfo 。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=NzdkNDViMGYxOGI2MTU0NTRiZTQ1NGNhZWE3ZWQ0YjdfemNZTGVxSlZYNDhQVm1wRkdsTnVRV3Q5MHY5eVRLcU5fVG9rZW46WUZlUWJPakx5b21YeGp4RlZIQWN4ZUJlblZQXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
+<ol>
+<li><h3 id="代码研究"><a href="#代码研究" class="headerlink" title="代码研究"></a>代码研究</h3><ol>
+<li>ICommonAction.java（接口）</li>
+</ol>
 <pre class="line-numbers language-Java" data-language="Java"><code class="language-Java">package nccloud.framework.web.action.itf;
 
 import nccloud.framework.web.container.IRequest;
@@ -315,7 +305,9 @@ public interface ICommonAction &#123;
     Object doAction(IRequest var1);
 &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>NCCAction</p>
+<ol>
+<li>NCCAction</li>
+</ol>
 <pre class="line-numbers language-Java" data-language="Java"><code class="language-Java">&#x2F;&#x2F; NCCAction 是一个抽象类，提供了处理 Web 请求的标准化流程。
 &#x2F;&#x2F;该类实现了一个ICommonAction接口，包含请求参数处理、操作执行和异常处理等核心逻辑
 public abstract class NCCAction implements ICommonAction &#123;
@@ -481,7 +473,9 @@ public abstract class NCCAction implements ICommonAction &#123;
     &#125;
 &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>IRefSqlBuilder.Java</p>
+<ol>
+<li>IRefSqlBuilder.Java</li>
+</ol>
 <pre class="line-numbers language-Java" data-language="Java"><code class="language-Java">&#x2F;&#x2F;SQL生成器
 public interface IRefSqlBuilder &#123;
     &#x2F;&#x2F;用于拼接Sql语句中where 后的条件语句
@@ -494,7 +488,9 @@ public interface IRefSqlBuilder &#123;
     String getOrderSql(RefQueryInfo var1, RefMeta var2);
 &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><strong>AbstractRefAction.java</strong></p>
+<ol>
+<li><strong>AbstractRefAction.java</strong></li>
+</ol>
 <pre class="line-numbers language-Java" data-language="Java"><code class="language-Java">&#x2F;&#x2F; 抽象的引用动作类，继承了NCCAction并实现了IRefSqlBuilder接口，负责数据引用查询的操作
 public abstract class AbstractRefAction extends NCCAction implements IRefSqlBuilder &#123;
     private Boolean blShowDisabledData &#x3D; null;
@@ -671,7 +667,9 @@ public abstract class AbstractRefAction extends NCCAction implements IRefSqlBuil
     &#125;
 &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>DefaultGridRefAction.java</p>
+<ol>
+<li>DefaultGridRefAction.java</li>
+</ol>
 <pre class="line-numbers language-Java" data-language="Java"><code class="language-Java">public abstract class DefaultGridRefAction extends AbstractRefAction &#123;
     public DefaultGridRefAction() &#123;
     &#125;
@@ -702,8 +700,10 @@ public abstract class AbstractRefAction extends NCCAction implements IRefSqlBuil
     &#125;
 &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>NCGridRefDBProcesso.java</p>
-<p>Tax_hws_serviceDefaultGridRefAction.java</p>
+<ol>
+<li>NCGridRefDBProcesso.java</li>
+<li>Tax_hws_serviceDefaultGridRefAction.java</li>
+</ol>
 <pre class="line-numbers language-Java" data-language="Java"><code class="language-Java">public class Tax_hws_serviceDefaultGridRefAction extends DefaultGridRefAction &#123;
     
     public Tax_hws_serviceDefaultGridRefAction() &#123;
@@ -725,27 +725,30 @@ public abstract class AbstractRefAction extends NCCAction implements IRefSqlBuil
     &#125;
 
 &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<ol>
-<li><h3 id="参照前端"><a href="#参照前端" class="headerlink" title="参照前端"></a>参照前端</h3><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092286-8.png" alt="img"></p>
-<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092286-9.png" alt="img"></p>
+</li>
+<li><h3 id="参照前端"><a href="#参照前端" class="headerlink" title="参照前端"></a>参照前端</h3><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=YTVhYWRhNWQ1MGQ2YTRlYWJiM2Q1ZTUzMGRmN2E4ZGZfUWZFSnNVdGRJcWJtSDRUTXVnZG53Nk03bGpKR2cxY0pfVG9rZW46RTJjOGIyTWJNb3NQa3d4dUlYaWNZY3h3blFFXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=OWU4M2JjYWY1MmNmNTVhOTc1Mjk2Y2MwMjQ5YTY3NTFfYVZYejA3RndXRDFIRGxDMlZRWnhlWjJkUmVlUWJlSEpfVG9rZW46UWY3RWI2NGllb0VjOU94Uk56S2M0UUJXbkliXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
 </li>
 </ol>
-<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092287-10.png" alt="img"></p>
-<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092287-11.png" alt="img"></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=MzczODVhZWRmOWExNDViNmM4MGRmMzg2ZjBkNzAzYjRfVHFEeUdWbG93UjM3VGdvS05ISzNWZ05KcUIxdlh2VVBfVG9rZW46T29CeWJybklmb3dyS2h4TGNWWGNjb0pSbkxoXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=NDYzMDM4M2JhMjQ3NWNhY2VlMzU3ZGZiNWMwZjg5ZThfbXpQQWJPY0gyVDRuQkxnbG5sWXdndmtoSWxqbXZqZ1BfVG9rZW46QWxGRWIzZmtnbzBTczd4dFdXbGNwV3MybkVmXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
 <p>点击（事件）参照表格后返回的json对象：</p>
-<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092287-12.png" alt="img"></p>
-<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092287-13.png" alt="img"></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=NWY4NGRmMDRmY2VjYzI5MDhkMjFjYjY1YTU5NmQ4MTBfMXlXeU5CTUQzSXlZZXhaMUtDVlJvR1JMa3lZdlp1OWdfVG9rZW46TkdwTmJ3OW83b09VOGx4dEI5QWN4QmIzbndQXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=ZGFhMDA0MGM5Nzc5YzA0OWMwMGE4MDc1OTVlNDUwNzBfTnFZTnhEQ0Q0N2hMdTJHbExjdmRQa2JYc3BkejRYUDBfVG9rZW46T0NWVGJGOXFMb3lpdTl4U2dTSGNxbkRmbnVoXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
 <ol>
 <li><h3 id="YonBIP参照创建（应用注册）"><a href="#YonBIP参照创建（应用注册）" class="headerlink" title="YonBIP参照创建（应用注册）"></a>YonBIP参照创建（应用注册）</h3></li>
-<li><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092287-14.png" alt="img"></p>
+<li><ol>
+<li><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmUwMGRiZDE0NjliZjBlZjRmMGJjMWQ3YWViYTRmYWFfQmE5a0ZhTkNhSWdpQ0M5OUVIZ0FjZWpOanZnRWozdXpfVG9rZW46Rzc1cWJmazdQb3J2QWt4Qk9PaWM2MHFGbjdkXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
 </li>
-<li><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092287-15.png" alt="img"></p>
+<li><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTA0NGY2ZmYwMGEzY2I3ZTM2ODVmYzhlNWM5NmJkNDVfTkthWTdQcFlnYnNFQUNrUktkcFhyTVdpT050aUZyTlVfVG9rZW46UUZIUmIzQ3Rqb0VQMUx4VXVwZGM5NGpLbkJoXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
 </li>
 </ol>
-<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092287-16.png" alt="img"></p>
-<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092287-17.png" alt="img"></p>
-<h3 id="讲解思路"><a href="#讲解思路" class="headerlink" title="讲解思路"></a>讲解思路</h3><ol>
+</li>
+</ol>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=ZGVmMjJmNGI4NTJiMTQ5MWRhNzk3NzZhYjIxZWFjNTBfUEVZOFlQVnB2Sk1YWDFnSFNUUnVyUzNZS0x0eG1mUWxfVG9rZW46RDZKb2JXWEl2bzd5bzN4UFVKNWN2WENzblVlXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=MmE5M2FkZDg3NzFhMjdmN2IwZTI3MzkyMWMwNjEwMjNfelRxM1RmQ1RQNTFIUVN6RXBNUFJieTd2cFlUaXc1QmJfVG9rZW46VlVTaGJvekpIb1dtSHV4QXQxa2NVNlBKbmZjXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
+<ol>
+<li><h3 id="讲解思路"><a href="#讲解思路" class="headerlink" title="讲解思路"></a>讲解思路</h3></li>
 <li><p><strong>模型层 (Model)</strong></p>
 <ol>
 <li><strong><code>NCGridRefDBProcessor</code></strong></li>
@@ -770,19 +773,19 @@ public abstract class AbstractRefAction extends NCCAction implements IRefSqlBuil
 <li><h3 id="具体思路"><a href="#具体思路" class="headerlink" title="具体思路"></a>具体思路</h3><ol>
 <li><h3 id="参照创建（通过应用注册添加新参照）"><a href="#参照创建（通过应用注册添加新参照）" class="headerlink" title="参照创建（通过应用注册添加新参照）"></a>参照创建（通过应用注册添加新参照）</h3></li>
 </ol>
-<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092287-18.png" alt="img"></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=NDU0ZGE5YjM3ODJmNjkyZTNjZTA4NmIyMDBjMTIxOTVfSjcyWDl0VEZJTFBDMzlTcFhyRjd5dURUVktPd2lvYlZfVG9rZW46QXY0eWJ4SE84b0xURVV4b1RqOWN6N2RGbnJjXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
 <ul>
 <li>进入模板设置页面，选择参照组件，添加到模板中，并设置数据编码以及参照标题</li>
 </ul>
-<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092287-19.png" alt="img"></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=YTBjOWRjZTJmYThiMDlkZjk1NmM5YWNiYWFmNzQwZDhfdmg0V2t4bnFBWThHSzZGemhUZE1uZzFld2Jud3Rjc09fVG9rZW46SFRmY2JjMlhNb0J0MmF4RHNDaGNxa0NGblVlXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
 <ul>
 <li>点击新参照组件，选择高级属性编辑，设置参照类型，在弹窗中选择参照</li>
 </ul>
-<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092287-20.png" alt="img"></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=MjIyNTAwN2U0OTNkYzJhMWU0Yjk3N2VjNjdiMGIyYjBfbGhGZEU0b0s0U3kwWU83bXRFcjl5M2k5Y0ZzYXZiTWtfVG9rZW46RHB2RGJaa08yb1BTdHd4cThYNWNXRHBTblZlXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
 <ul>
 <li>保存之后，点击新参照组件，出现弹窗就可以选择对应的参照对象，实现新参照生成。</li>
 </ul>
-<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092287-21.png" alt="img"></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=NDVmZTZiMjE2M2FjZWU4N2ZmYjk0YmFkYmQ3MDAzNWNfdnFKVDhOOWtsNlFVeXFza0J6V2lBdGRhQTBJVkJYeFVfVG9rZW46RlB1MGJMeGhDbzBlcmR4WVVjTWM3NFVpbkpjXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
 <ol>
 <li><h3 id="参照前端（React）"><a href="#参照前端（React）" class="headerlink" title="参照前端（React）"></a>参照前端（React）</h3><ul>
 <li>参照前端的相关属性配置</li>
@@ -797,47 +800,46 @@ public abstract class AbstractRefAction extends NCCAction implements IRefSqlBuil
 &#x2F;&#x2F;name: 用于定义表格列的显示名称。
 &#x2F;&#x2F;code: 对应后端数据返回的字段名，决定了表格中展示的数据源。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
-<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092288-22.png" alt="img"></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=OWZkNDgyMTFjY2M2YzZlNmIwZTJhZmZhZjYzYjUwYTRfM2lVQnFRb29kTUlMREZITHV6Q2Y1ZjNqMnVIVU9PNXZfVG9rZW46RklEV2JRM0w3b09nMzZ4anhFSWNiMVdibmVmXzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
 </li>
-<li><h3 id="参照后端（Java）-MVC模式讲解"><a href="#参照后端（Java）-MVC模式讲解" class="headerlink" title="参照后端（Java）-MVC模式讲解"></a>参照后端（Java）-MVC模式讲解</h3></li>
-<li><h4 id="1-Tax-hws-serviceDefaultGridRefAction-参照类"><a href="#1-Tax-hws-serviceDefaultGridRefAction-参照类" class="headerlink" title="1. Tax_hws_serviceDefaultGridRefAction 参照类"></a>1. <code>Tax_hws_serviceDefaultGridRefAction</code> 参照类</h4></li>
-<li><ul>
-<li><p><code>Tax_hws_serviceDefaultGridRefAction</code> 类是整个参照功能的入口类，继承自 <code>DefaultGridRefAction</code>。该类用于处理用户从前端触发的参照请求，并生成查询参照数据的关键元数据。在这个类中，最核心的部分是 <code>getRefMeta()</code> 方法，它构建并返回 <code>RefMeta</code> 对象，表示参照的元数据定义。</p>
+<li><p>参照后端（Java）-MVC模式讲解</p>
+<ol>
+<li><ol>
+<li><h3 id="参照类Tax-hws-serviceDefaultGridRefAction"><a href="#参照类Tax-hws-serviceDefaultGridRefAction" class="headerlink" title="参照类Tax_hws_serviceDefaultGridRefAction"></a>参照类<code>Tax_hws_serviceDefaultGridRefAction</code></h3><ul>
+<li><p><code>Tax_hws_serviceDefaultGridRefAction</code> 类是整个参照功能的入口类，继承自 <code>DefaultGridRefAction</code>，该类主要用于处理用户从前端触发的参照请求，并生成查询参照数据的关键元数据。在这个类中，我们看到最核心的部分是 <code>getRefMeta()</code> 方法，它构建并返回 <code>RefMeta</code> 对象，表示参照的元数据定义。</p>
 </li>
-<li><p><strong>核心方法：<code>getRefMeta(RefQueryInfo refQueryInfo)</code></strong></p>
+<li><p><code>getRefMeta(RefQueryInfo refQueryInfo)</code> 这个方法是 <code>Tax_hws_serviceDefaultGridRefAction</code> 的核心方法，负责构建并返回参照元数据 <code>RefMeta</code>，这个对象包含了参照所需的所有信息（如字段名、表名、主键等），这些信息用于后续的 SQL 查询和数据展示。包括以下几部分：</p>
 <ul>
-<li><code>getRefMeta()</code> 是 <code>Tax_hws_serviceDefaultGridRefAction</code> 的核心方法，负责构建并返回参照元数据 <code>RefMeta</code>。该对象包含了参照所需的所有信息（如字段名、表名、主键等），这些信息用于后续的 SQL 查询和数据展示。包括以下几部分：<ul>
 <li><strong>编码字段</strong>：<code>codeField</code> 是 <code>code</code>，表示在表格中展示的每条记录的编码字段。</li>
 <li><strong>名称字段</strong>：<code>nameField</code> 是 <code>name</code>，对应表格中展示的记录名称字段。</li>
 <li><strong>主键字段</strong>：<code>pkField</code> 是 <code>pk_vtax_tax_hws_service</code>，这是数据库表 <code>vtax_tax_hws_service</code> 的主键字段，用于标识每条记录。</li>
 <li><strong>表名</strong>：<code>tableName</code> 是 <code>vtax_tax_hws_service</code>，表示从数据库中查询的表名。</li>
-<li><strong>多语言支持</strong>：通过 <code>setMutilLangNameRef(true)</code> 表明参照支持多语言。</li>
+<li><strong>多语言支持</strong>：通过 <code>setMutilLangNameRef(true)</code> 说明参照支持多语言。</li>
 </ul>
 </li>
-</ul>
-</li>
-<li><p><strong>主要作用</strong></p>
+<li><p>主要作用</p>
 <ul>
 <li>定义当前参照的元数据，包括参照表的名称、参照字段（编码、名称、主键）以及是否支持多语言。</li>
 <li>通过 <code>getRefMeta()</code> 返回 <code>RefMeta</code>，为 <code>DefaultGridRefAction</code> 的核心查询逻辑提供必要的元数据信息。</li>
 <li>配置数据权限控制和是否显示被停用数据等业务规则（如 <code>setResourceCode</code> 和 <code>setShowDisabledData</code>）。</li>
 </ul>
+<p> <code>RefMeta</code> 存储的数据示例：</p>
 </li>
 </ul>
-</li>
-<li><h4 id="RefMeta-存储的数据示例"><a href="#RefMeta-存储的数据示例" class="headerlink" title="RefMeta 存储的数据示例"></a><code>RefMeta</code> 存储的数据示例</h4></li>
-<li><blockquote>
-<ul>
-<li><strong>Code Field</strong>: <code>code</code></li>
-<li><strong>Name Field</strong>: <code>name</code></li>
-<li><strong>PK Field</strong>: <code>pk_vtax_tax_hws_service</code></li>
-<li><strong>Table Name</strong>: <code>vtax_tax_hws_service</code></li>
-<li><strong>Multi-language Support</strong>: <code>true</code><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://47.96.93.32/yonyouFintech/1730193092288-23.png" alt="img"></li>
-</ul>
+<blockquote>
+<p>Code Field: code</p>
+<p>Name Field: name</p>
+<p>PK Field: pk_vtax_tax_hws_service</p>
+<p>Table Name: vtax_tax_hws_service</p>
+<p>Multi-language Support: true</p>
 </blockquote>
 </li>
-<li><h3 id="DefaultGridRefAction"><a href="#DefaultGridRefAction" class="headerlink" title="DefaultGridRefAction"></a><code>DefaultGridRefAction</code></h3></li>
-<li><ul>
+</ol>
+</li>
+<li><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://iiw4knewnom.feishu.cn/space/api/box/stream/download/asynccode/?code=YjYwZGEyN2Y2N2YzMDZmMTk0NDE1Y2UwZDk2N2RiMTJfcm1zRk4zT1E0Z0pKd3h3bGVuMmxsOWh4czJjUHV6a2JfVG9rZW46THZiNGJaeUQzb2ZkRU54ajJuUWNoQlRIblJ1XzE3MzAzNjI4MzU6MTczMDM2NjQzNV9WNA" alt="img"></p>
+</li>
+<li><ol>
+<li><h3 id="DefaultGridRefAction"><a href="#DefaultGridRefAction" class="headerlink" title="DefaultGridRefAction"></a><code>DefaultGridRefAction</code></h3><ul>
 <li><code>DefaultGridRefAction</code> 是一个抽象类，继承自 <code>AbstractRefAction</code>，它为表格参照功能提供了默认的实现。<code>DefaultGridRefAction</code> 中定义了参照功能的几个核心方法，帮助处理参照的查询逻辑，尤其是通过 <code>processData()</code> 方法完成对数据的查询与处理。</li>
 <li><code>NCGridRefDBProcessor</code> 是负责实际数据库查询的处理器，它结合 <code>RefMeta</code> 和 <code>IRefSqlBuilder</code> 生成 SQL 语句，执行查询，并将结果封装成 <code>RefRow[]</code> 和 <code>RefQueryResult</code>。</li>
 <li><code>getRefMeta()</code>：返回 <code>RefMeta</code> 对象，定义参照功能的数据结构，如字段、表名等。</li>
@@ -850,416 +852,528 @@ public abstract class AbstractRefAction extends NCCAction implements IRefSqlBuil
 </li>
 <li><strong>DefaultGridRefAction.java（核心处理逻辑类）</strong></li>
 </ul>
-</li>
-<li><pre><code class="Java">public abstract class DefaultGridRefAction extends AbstractRefAction &#123;
+<pre class="line-numbers language-Java" data-language="Java"><code class="language-Java">public abstract class DefaultGridRefAction extends AbstractRefAction &#123;
     public DefaultGridRefAction() &#123;
     &#125;
 
     public abstract RefMeta getRefMeta(RefQueryInfo var1);
 
-    /** @deprecated */
+    &#x2F;** @deprecated *&#x2F;
     @Deprecated
     protected void initPageInfo(PageInfo pageInfo) &#123;
     &#125;
 
     protected RefQueryResult processData(TreeRefQueryInfo refQueryInfo) &#123;
-        //1.获取SQL构造器
-        //IRefSqlBuilder 是一个接口，负责生成 SQL 查询语句。
-        //在这里，我们通过 getRefSqlBuilder(refQueryInfo) 方法获取 SQL 构造器。
-        //refQueryInfo 对象包含了前端传递的查询条件（如关键字、分页信息、过滤条件）
-        //这些条件会用于生成 SQL 查询。
-        //refSqlBuilder通过 RefQueryInfo 的数据生成最终执行的 SQL 查询语句
-        //处理条件拼接、排序等复杂的 SQL 操作。
-        IRefSqlBuilder refSqlBuilder = this.getRefSqlBuilder(refQueryInfo);
+        &#x2F;&#x2F;1.获取SQL构造器
+        &#x2F;&#x2F;IRefSqlBuilder 是一个接口，负责生成 SQL 查询语句。
+        &#x2F;&#x2F;在这里，我们通过 getRefSqlBuilder(refQueryInfo) 方法获取 SQL 构造器。
+        &#x2F;&#x2F;refQueryInfo 对象包含了前端传递的查询条件（如关键字、分页信息、过滤条件）
+        &#x2F;&#x2F;这些条件会用于生成 SQL 查询。
+        &#x2F;&#x2F;refSqlBuilder通过 RefQueryInfo 的数据生成最终执行的 SQL 查询语句
+        &#x2F;&#x2F;处理条件拼接、排序等复杂的 SQL 操作。
+        IRefSqlBuilder refSqlBuilder &#x3D; this.getRefSqlBuilder(refQueryInfo);
         
         
-        //2.初始化处理器
-        //NCGridRefDBProcessor 是一个用于执行数据库查询的处理器。
-        //它会结合 RefMeta（元数据）和 IRefSqlBuilder 生成查询。
-        //this.getRefMeta(refQueryInfo)：调用会返回当前参照的元数据信息（如字段名、主键、表名等)用于SQL生成
-        //refSqlBuilder 用于构造 SQL 查询的实际语句:
-        //通过将 RefMeta 和 IRefSqlBuilder 传入，处理器能够构建出最终要执行的 SQL 查询。
-        NCGridRefDBProcessor processor = new NCGridRefDBProcessor(this.getRefMeta(refQueryInfo), refSqlBuilder);
+        &#x2F;&#x2F;2.初始化处理器
+        &#x2F;&#x2F;NCGridRefDBProcessor 是一个用于执行数据库查询的处理器。
+        &#x2F;&#x2F;它会结合 RefMeta（元数据）和 IRefSqlBuilder 生成查询。
+        &#x2F;&#x2F;this.getRefMeta(refQueryInfo)：调用会返回当前参照的元数据信息（如字段名、主键、表名等)用于SQL生成
+        &#x2F;&#x2F;refSqlBuilder 用于构造 SQL 查询的实际语句:
+        &#x2F;&#x2F;通过将 RefMeta 和 IRefSqlBuilder 传入，处理器能够构建出最终要执行的 SQL 查询。
+        NCGridRefDBProcessor processor &#x3D; new NCGridRefDBProcessor(this.getRefMeta(refQueryInfo), refSqlBuilder);
         
         
-        //3.根据条件查询参照主键
-        //理器通过调用 queryRefPks() 方法，根据 refQueryInfo 中的条件，查询参照数据的主键（PK）。
-        //queryRefPks() 返回一个主键数组 strQueryRefPks。
-        //表示数据库中符合查询条件的记录的主键值。
-        String[] strQueryRefPks = processor.queryRefPks(refQueryInfo);
+        &#x2F;&#x2F;3.根据条件查询参照主键
+        &#x2F;&#x2F;理器通过调用 queryRefPks() 方法，根据 refQueryInfo 中的条件，查询参照数据的主键（PK）。
+        &#x2F;&#x2F;queryRefPks() 返回一个主键数组 strQueryRefPks。
+        &#x2F;&#x2F;表示数据库中符合查询条件的记录的主键值。
+        String[] strQueryRefPks &#x3D; processor.queryRefPks(refQueryInfo);
        
-        //4.处理查询出的参照主键
-        //通过调用 processRefPks() 方法，进一步处理查询出来的主键（参照过滤，处理特定的业务逻辑）
-        //处理完之后，返回一个更新后的主键数组 strQueryRefPks。
-        strQueryRefPks = this.processRefPks(refQueryInfo, refSqlBuilder, strQueryRefPks);
+        &#x2F;&#x2F;4.处理查询出的参照主键
+        &#x2F;&#x2F;通过调用 processRefPks() 方法，进一步处理查询出来的主键（参照过滤，处理特定的业务逻辑）
+        &#x2F;&#x2F;处理完之后，返回一个更新后的主键数组 strQueryRefPks。
+        strQueryRefPks &#x3D; this.processRefPks(refQueryInfo, refSqlBuilder, strQueryRefPks);
         
-        //5.根据主键查询所有所需的字段
-        //通过主键数组 strQueryRefPks，调用 processor.getRowsByPks()，从数据库中查询每条记录的所有字段信息。
-        //返回值是一个 RefRow[] 数组
-        //每个 RefRow 代表一个查询结果的行，包含所有所需的字段（如 code，name，pk 等）。
-        RefRow[] refRows = processor.getRowsByPks(strQueryRefPks);
+        &#x2F;&#x2F;5.根据主键查询所有所需的字段
+        &#x2F;&#x2F;通过主键数组 strQueryRefPks，调用 processor.getRowsByPks()，从数据库中查询每条记录的所有字段信息。
+        &#x2F;&#x2F;返回值是一个 RefRow[] 数组
+        &#x2F;&#x2F;每个 RefRow 代表一个查询结果的行，包含所有所需的字段（如 code，name，pk 等）。
+        RefRow[] refRows &#x3D; processor.getRowsByPks(strQueryRefPks);
         
-        //6.处理最后查询出的结果集
-        //进一步处理查询出的数据行，类似于处理主键的步骤。
-        //对数据行进行额外的处理或过滤，比如多语言处理、字段格式化等。
-        //处理完成回，返回一个refRows数组
-        refRows = this.processRefRows(refQueryInfo, refSqlBuilder, refRows);
+        &#x2F;&#x2F;6.处理最后查询出的结果集
+        &#x2F;&#x2F;进一步处理查询出的数据行，类似于处理主键的步骤。
+        &#x2F;&#x2F;对数据行进行额外的处理或过滤，比如多语言处理、字段格式化等。
+        &#x2F;&#x2F;处理完成回，返回一个refRows数组
+        refRows &#x3D; this.processRefRows(refQueryInfo, refSqlBuilder, refRows);
         
-        //7.构造返回结果，返回数据
-        //调用 processor.constructResult() 方法，将处理过的 RefRow[] 和分页信息打包成一个 RefQueryResult 对象。
-        //refQueryResult 是最终返回给前端的数据结构，包含了查询的结果集和分页信息。
-        RefQueryResult refQueryResult = processor.constructResult(refRows, refQueryInfo);
+        &#x2F;&#x2F;7.构造返回结果，返回数据
+        &#x2F;&#x2F;调用 processor.constructResult() 方法，将处理过的 RefRow[] 和分页信息打包成一个 RefQueryResult 对象。
+        &#x2F;&#x2F;refQueryResult 是最终返回给前端的数据结构，包含了查询的结果集和分页信息。
+        RefQueryResult refQueryResult &#x3D; processor.constructResult(refRows, refQueryInfo);
         return refQueryResult;
     &#125;
-&#125;
-<pre class="line-numbers language-none"><code class="language-none">
-9. 
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ol>
+</li>
+<li></li>
+<li><ol>
+<li><h3 id="AbstractRefAction-java"><a href="#AbstractRefAction-java" class="headerlink" title="AbstractRefAction.java"></a><strong><code>AbstractRefAction.java</code></strong></h3><ul>
+<li><code>AbstractRefAction</code> 提供了很多参照功能中的基础逻辑，如数据权限、多语言处理、SQL 构建等。它通过接口 <code>IRefSqlBuilder</code> 实现 SQL 查询构建，并为参照功能提供了灵活的扩展接口。</li>
+<li><code>DefaultRefSqlBuilder</code> 会使用 <code>RefQueryInfo</code> 中存储的条件，包括组织、集团 ID 和其他过滤条件，这些都是由入口类或 <code>AbstractRefAction</code> 设置的。</li>
+<li></li>
+</ul>
+</li>
+</ol>
+</li>
+<li><pre><code class="Java">// 抽象的引用动作类，继承了NCCAction并实现了IRefSqlBuilder接口，负责数据引用查询的操作
+public abstract class AbstractRefAction extends NCCAction implements IRefSqlBuilder &#123;
+    private Boolean blShowDisabledData = null;//控制是否展示被停用的数据
+    private String strDataPowerColumn;//负责数据权限的字段。系统可以根据用户角色或组织权限来过滤参照数据。
+    private String strMdClassId;
+    private String strUnitPkKey = null;
+    private String strUsualDataPkFieldName = null;
+    private String strUsualDataTableName = null;
 
-10. ###   **&#96;AbstractRefAction.java&#96;**
+    //无参构造
+    public AbstractRefAction() &#123;&#125;
 
-11. - &#96;AbstractRefAction&#96; 提供了很多参照功能中的基础逻辑，如数据权限、多语言处理、SQL 构建等。它通过接口 &#96;IRefSqlBuilder&#96; 实现 SQL 查询构建，并为参照功能提供了灵活的扩展接口。
-    - &#96;DefaultRefSqlBuilder&#96; 会使用 &#96;RefQueryInfo&#96; 中存储的条件，包括组织、集团 ID 和其他过滤条件，这些都是由入口类或 &#96;AbstractRefAction&#96; 设置的。
-
-12. &#96;&#96;&#96;Java
-    &#x2F;&#x2F; 抽象的引用动作类，继承了NCCAction并实现了IRefSqlBuilder接口，负责数据引用查询的操作
-    public abstract class AbstractRefAction extends NCCAction implements IRefSqlBuilder &#123;
-        private Boolean blShowDisabledData &#x3D; null;&#x2F;&#x2F;控制是否展示被停用的数据
-        private String strDataPowerColumn;&#x2F;&#x2F;负责数据权限的字段。系统可以根据用户角色或组织权限来过滤参照数据。
-        private String strMdClassId;
-        private String strUnitPkKey &#x3D; null;
-        private String strUsualDataPkFieldName &#x3D; null;
-        private String strUsualDataTableName &#x3D; null;
-    
-        &#x2F;&#x2F;无参构造
-        public AbstractRefAction() &#123;&#125;
-    
-        &#x2F;**
-         * 执行引用查询操作
-         * @param request 请求对象
-         * @param para 查询参数
-         * @return 查询结果
-         * @throws Exception 异常
-         *&#x2F;
-        public &lt;T&gt; Object execute(IRequest request, T para) throws Exception &#123;
-            &#x2F;&#x2F; 将通用参数 para 转换为 TreeRefQueryInfo，从而可以访问参照数据特定的查询条件 queryCondition。
-            TreeRefQueryInfo refQueryInfo &#x3D; (TreeRefQueryInfo) para;
-            Map&lt;String, String&gt; queryCondition &#x3D; refQueryInfo.getQueryCondition();
-            &#x2F;&#x2F; 判断是否显示常用数据：通过 isShowUsual 判断用户是否选择了查看常用数据（即常用参照）。
-            boolean isShowUsual &#x3D; UFBoolean.valueOf(queryCondition.get(&quot;isShowUsual&quot;)).booleanValue();
-            &#x2F;&#x2F; 如果显示常用数据.开始构建常用参照的SQL
-            if (isShowUsual) &#123;
-                &#x2F;&#x2F; 系统会使用 UsualRefSqlBuilder，以便构建常用参照的 SQL 查询。
-                String strUsualGridRefActionExt &#x3D; queryCondition.get(&quot;UsualGridRefActionExt&quot;);
-                strUsualGridRefActionExt &#x3D; StringUtils.isBlank(strUsualGridRefActionExt)
-                        ? UsualRefSqlBuilder.class.getName()
-                        : strUsualGridRefActionExt + &quot;,&quot; + UsualRefSqlBuilder.class.getName(); 
-                &#x2F;&#x2F; 确保常用数据查询能使用适当的 SQL 构建规则。
-                String gridRefActionExts &#x3D; queryCondition.get(&quot;GridRefActionExt&quot;);
-                gridRefActionExts &#x3D; StringUtils.isBlank(gridRefActionExts)
-                        ? strUsualGridRefActionExt
-                        : gridRefActionExts + &quot;,&quot; + strUsualGridRefActionExt;
-                queryCondition.put(&quot;GridRefActionExt&quot;, gridRefActionExts);
-                &#x2F;&#x2F; 设置单位主键（组织过滤）
-                if (StringUtils.isBlank(this.getQueryValue(refQueryInfo, &quot;unitPks&quot;))) &#123;
-                    this.setQueryValue(refQueryInfo, &quot;unitPks&quot;, this.getPk_org(refQueryInfo));
-                &#125;
-            &#125; else &#123;
-                this.initPageInfo(refQueryInfo.getPageInfo());
+    /**
+     * 执行引用查询操作
+     * @param request 请求对象
+     * @param para 查询参数
+     * @return 查询结果
+     * @throws Exception 异常
+     */
+    public &lt;T&gt; Object execute(IRequest request, T para) throws Exception &#123;
+        // 将通用参数 para 转换为 TreeRefQueryInfo，从而可以访问参照数据特定的查询条件 queryCondition。
+        TreeRefQueryInfo refQueryInfo = (TreeRefQueryInfo) para;
+        Map&lt;String, String&gt; queryCondition = refQueryInfo.getQueryCondition();
+        // 判断是否显示常用数据：通过 isShowUsual 判断用户是否选择了查看常用数据（即常用参照）。
+        boolean isShowUsual = UFBoolean.valueOf(queryCondition.get(&quot;isShowUsual&quot;)).booleanValue();
+        // 如果显示常用数据.开始构建常用参照的SQL
+        if (isShowUsual) &#123;
+            // 系统会使用 UsualRefSqlBuilder，以便构建常用参照的 SQL 查询。
+            String strUsualGridRefActionExt = queryCondition.get(&quot;UsualGridRefActionExt&quot;);
+            strUsualGridRefActionExt = StringUtils.isBlank(strUsualGridRefActionExt)
+                    ? UsualRefSqlBuilder.class.getName()
+                    : strUsualGridRefActionExt + &quot;,&quot; + UsualRefSqlBuilder.class.getName(); 
+            // 确保常用数据查询能使用适当的 SQL 构建规则。
+            String gridRefActionExts = queryCondition.get(&quot;GridRefActionExt&quot;);
+            gridRefActionExts = StringUtils.isBlank(gridRefActionExts)
+                    ? strUsualGridRefActionExt
+                    : gridRefActionExts + &quot;,&quot; + strUsualGridRefActionExt;
+            queryCondition.put(&quot;GridRefActionExt&quot;, gridRefActionExts);
+            // 设置单位主键（组织过滤）
+            if (StringUtils.isBlank(this.getQueryValue(refQueryInfo, &quot;unitPks&quot;))) &#123;
+                this.setQueryValue(refQueryInfo, &quot;unitPks&quot;, this.getPk_org(refQueryInfo));
             &#125;
-            this.initUnitPk(refQueryInfo, this.getKeyUnitPks());
-            &#x2F;&#x2F; 系统调用 processData() 方法执行具体的参照数据查询
-            &#x2F;&#x2F; 并返回查询结果 RefQueryResult，该对象包含查询后的数据和分页信息。
-            RefQueryResult refQueryResult &#x3D; this.processData(refQueryInfo);
-            return refQueryResult;
+        &#125; else &#123;
+            this.initPageInfo(refQueryInfo.getPageInfo());
         &#125;
+        this.initUnitPk(refQueryInfo, this.getKeyUnitPks());
+        // 系统调用 processData() 方法执行具体的参照数据查询
+        // 并返回查询结果 RefQueryResult，该对象包含查询后的数据和分页信息。
+        RefQueryResult refQueryResult = this.processData(refQueryInfo);
+        return refQueryResult;
+    &#125;
+
+    // 获取额外的SQL条件，拼接Sql语句中where 后的条件语句
+    public String getExtraSql(RefQueryInfo refQueryInfo, RefMeta refMeta) &#123;
+        return null;
+    &#125;
+
+    // 获取额外的SQL参数,设置where后条件语句中占位符对应的真实数据（为了防止Sql注入）
+    public SqlParameterCollection getExtraSqlParameter(RefQueryInfo refQueryInfo, RefMeta refMeta) &#123;
+        return null;
+    &#125;
     
-        &#x2F;&#x2F; 获取额外的SQL条件，拼接Sql语句中where 后的条件语句
-        public String getExtraSql(RefQueryInfo refQueryInfo, RefMeta refMeta) &#123;
-            return null;
-        &#125;
+    // getPk_org() 和 getPk_group() 提供了数据权限控制的组织和集团过滤条件。
+    // 入口类通过 setQueryValue() 方法将这些组织、集团 ID 作为条件传入 RefQueryInfo
+    // 确保只有当前用户所属的组织和集团数据可以被查询到。
+    public String getPk_org(RefQueryInfo refQueryInfo) &#123;
+    String strPk_org = this.getQueryValue(refQueryInfo, &quot;pk_org&quot;);
+    return StringUtils.isBlank(strPk_org) ? this.getPk_group(refQueryInfo) : strPk_org;
+    &#125;
     
-        &#x2F;&#x2F; 获取额外的SQL参数,设置where后条件语句中占位符对应的真实数据（为了防止Sql注入）
-        public SqlParameterCollection getExtraSqlParameter(RefQueryInfo refQueryInfo, RefMeta refMeta) &#123;
-            return null;
+    public String getPk_group(RefQueryInfo refQueryInfo) &#123;
+    String strPk_group_session = SessionContext.getInstance().getClientInfo().getPk_group();
+    if (refQueryInfo == null) &#123;
+        return strPk_group_session;
+        &#125; else &#123;
+        String strPk_group2 = this.getQueryValue(refQueryInfo, &quot;pk_group&quot;);
+        return StringUtils.isBlank(strPk_group2) ? strPk_group_session : strPk_group2;
         &#125;
-        
-        &#x2F;&#x2F; getPk_org() 和 getPk_group() 提供了数据权限控制的组织和集团过滤条件。
-        &#x2F;&#x2F; 入口类通过 setQueryValue() 方法将这些组织、集团 ID 作为条件传入 RefQueryInfo
-        &#x2F;&#x2F; 确保只有当前用户所属的组织和集团数据可以被查询到。
-        public String getPk_org(RefQueryInfo refQueryInfo) &#123;
-        String strPk_org &#x3D; this.getQueryValue(refQueryInfo, &quot;pk_org&quot;);
-        return StringUtils.isBlank(strPk_org) ? this.getPk_group(refQueryInfo) : strPk_org;
-        &#125;
-        
-        public String getPk_group(RefQueryInfo refQueryInfo) &#123;
-        String strPk_group_session &#x3D; SessionContext.getInstance().getClientInfo().getPk_group();
-        if (refQueryInfo &#x3D;&#x3D; null) &#123;
-            return strPk_group_session;
-            &#125; else &#123;
-            String strPk_group2 &#x3D; this.getQueryValue(refQueryInfo, &quot;pk_group&quot;);
-            return StringUtils.isBlank(strPk_group2) ? strPk_group_session : strPk_group2;
-            &#125;
-        &#125;
+    &#125;
+
+    // 获取SQL构建器
+    // 这是一个工厂方法，返回 SQL 构造器
+    // DefaultRefSqlBuilder 负责根据 RefQueryInfo 构建 SQL 查询语句。
+    protected IRefSqlBuilder getRefSqlBuilder(RefQueryInfo refQueryInfo) &#123;
+        return new DefaultRefSqlBuilder(this, this, refQueryInfo);
+    &#125;
     
-        &#x2F;&#x2F; 获取SQL构建器
-        &#x2F;&#x2F; 这是一个工厂方法，返回 SQL 构造器
-        &#x2F;&#x2F; DefaultRefSqlBuilder 负责根据 RefQueryInfo 构建 SQL 查询语句。
-        protected IRefSqlBuilder getRefSqlBuilder(RefQueryInfo refQueryInfo) &#123;
-            return new DefaultRefSqlBuilder(this, this, refQueryInfo);
-        &#125;
-        
-        &#x2F;&#x2F; 多语言翻译处理
-        &#x2F;&#x2F; 通过 RefVO_mlang 中的多语言配置，设置不同语言的显示值，保证参照名称在不同语言环境下能正确展示。
-        protected void processMultiLang(RefQueryInfo refQueryInfo, RefRow refRow) &#123;
-            RefVO_mlang[] multiLangRefVOs &#x3D; this.getMultiLangRefVO();
-            if (!ArrayUtils.isEmpty(multiLangRefVOs)) &#123;
-                Map&lt;String, Cell&gt; mapRowValues &#x3D; refRow.getValues();
-                for (RefVO_mlang mlRefVO : multiLangRefVOs) &#123;
-                    String strResId &#x3D; mlRefVO.getPreStr();
-                    String[] strResIdFieldNames &#x3D; mlRefVO.getResIDFieldNames();
-    
-                    if (!ArrayUtils.isEmpty(strResIdFieldNames)) &#123;
-                        for (String fieldName : strResIdFieldNames) &#123;
-                            Object objValue &#x3D; mapRowValues.get(fieldName).getValue();
-                            if (objValue !&#x3D; null) &#123;
-                                strResId +&#x3D; objValue.toString();
-                            &#125;
+    // 多语言翻译处理
+    // 通过 RefVO_mlang 中的多语言配置，设置不同语言的显示值，保证参照名称在不同语言环境下能正确展示。
+    protected void processMultiLang(RefQueryInfo refQueryInfo, RefRow refRow) &#123;
+        RefVO_mlang[] multiLangRefVOs = this.getMultiLangRefVO();
+        if (!ArrayUtils.isEmpty(multiLangRefVOs)) &#123;
+            Map&lt;String, Cell&gt; mapRowValues = refRow.getValues();
+            for (RefVO_mlang mlRefVO : multiLangRefVOs) &#123;
+                String strResId = mlRefVO.getPreStr();
+                String[] strResIdFieldNames = mlRefVO.getResIDFieldNames();
+
+                if (!ArrayUtils.isEmpty(strResIdFieldNames)) &#123;
+                    for (String fieldName : strResIdFieldNames) &#123;
+                        Object objValue = mapRowValues.get(fieldName).getValue();
+                        if (objValue != null) &#123;
+                            strResId += objValue.toString();
                         &#125;
-    
-                        Object objFieldValue &#x3D; mapRowValues.get(mlRefVO.getFieldName()).getValue();
-                        String strDirName &#x3D; mlRefVO.getDirName();
-                        if (mlRefVO.getDirFieldName() !&#x3D; null) &#123;
-                            Object objDirFieldName &#x3D; mapRowValues.get(mlRefVO.getDirFieldName()).getValue();
-                            if (objDirFieldName !&#x3D; null) &#123;
-                                strDirName &#x3D; objDirFieldName.toString();
-                            &#125;
+                    &#125;
+
+                    Object objFieldValue = mapRowValues.get(mlRefVO.getFieldName()).getValue();
+                    String strDirName = mlRefVO.getDirName();
+                    if (mlRefVO.getDirFieldName() != null) &#123;
+                        Object objDirFieldName = mapRowValues.get(mlRefVO.getDirFieldName()).getValue();
+                        if (objDirFieldName != null) &#123;
+                            strDirName = objDirFieldName.toString();
                         &#125;
-    
-                        String strFieldValue &#x3D; objFieldValue &#x3D;&#x3D; null ? null : objFieldValue.toString();
-                        String strMultiLang &#x3D; this.getMultiLangResource(strDirName, strFieldValue, strResId);
-                        mapRowValues.get(mlRefVO.getFieldName()).setValue(strMultiLang);
-    
-                        RefMeta refMeta &#x3D; this.getRefMeta(refQueryInfo);
-                        if (refMeta !&#x3D; null &amp;&amp; ObjectUtils.equals(refMeta.getNameField(), mlRefVO.getFieldName())) &#123;
-                            refRow.setRefname(strMultiLang);
-                        &#125;
+                    &#125;
+
+                    String strFieldValue = objFieldValue == null ? null : objFieldValue.toString();
+                    String strMultiLang = this.getMultiLangResource(strDirName, strFieldValue, strResId);
+                    mapRowValues.get(mlRefVO.getFieldName()).setValue(strMultiLang);
+
+                    RefMeta refMeta = this.getRefMeta(refQueryInfo);
+                    if (refMeta != null &amp;&amp; ObjectUtils.equals(refMeta.getNameField(), mlRefVO.getFieldName())) &#123;
+                        refRow.setRefname(strMultiLang);
                     &#125;
                 &#125;
             &#125;
         &#125;
-    
-        &#x2F;&#x2F;用于枚举值的多语言处理。对于枚举类型的字段
-        &#x2F;&#x2F;系统通过多语言映射表返回相应语言的值，确保参照数据中的枚举字段多语言化。
-        protected void processMultiLangForEnum(RefQueryInfo refQueryInfo, RefRow refRow) &#123;
-            Map&lt;String, Map&lt;String, String&gt;&gt; mapRes &#x3D; this.getMultiLangForEnum();
-            if (!MapUtils.isEmpty(mapRes)) &#123;
-                Map&lt;String, Cell&gt; mapRowValues &#x3D; refRow.getValues();
-                for (String strEnumFieldName : mapRes.keySet()) &#123;
-                    Cell cell &#x3D; mapRowValues.get(strEnumFieldName);
-                    Object objFieldValue &#x3D; cell.getValue();
-                    String strMultiLang &#x3D; mapRes.get(strEnumFieldName).get(objFieldValue);
-                    cell.setValue(strMultiLang);
-                &#125;
+    &#125;
+
+    //用于枚举值的多语言处理。对于枚举类型的字段
+    //系统通过多语言映射表返回相应语言的值，确保参照数据中的枚举字段多语言化。
+    protected void processMultiLangForEnum(RefQueryInfo refQueryInfo, RefRow refRow) &#123;
+        Map&lt;String, Map&lt;String, String&gt;&gt; mapRes = this.getMultiLangForEnum();
+        if (!MapUtils.isEmpty(mapRes)) &#123;
+            Map&lt;String, Cell&gt; mapRowValues = refRow.getValues();
+            for (String strEnumFieldName : mapRes.keySet()) &#123;
+                Cell cell = mapRowValues.get(strEnumFieldName);
+                Object objFieldValue = cell.getValue();
+                String strMultiLang = mapRes.get(strEnumFieldName).get(objFieldValue);
+                cell.setValue(strMultiLang);
             &#125;
         &#125;
-    
-        &#x2F;&#x2F;processRefPks() 和 processRefRows() 方法
-        &#x2F;&#x2F;会进一步调用 AbstractRefAction 的权限和多语言处理逻辑。
-        protected String[] processRefPks(RefQueryInfo refQueryInfo, IRefSqlBuilder refSqlBuilder, String... strQueryRefPks) &#123;
-            return strQueryRefPks;
-        &#125;
-    
-        protected RefRow[] processRefRows(RefQueryInfo refQueryInfo, IRefSqlBuilder refSqlBuilder, RefRow... refRows) &#123;
-            if (!ArrayUtils.isEmpty(refRows)) &#123;
-                for (RefRow refRow : refRows) &#123;
-                    &#x2F;&#x2F; 多语言处理
-                    this.processMultiLang(refQueryInfo, refRow); 
-                    this.processMultiLangForEnum(refQueryInfo, refRow);
-                &#125;
+    &#125;
+
+    //processRefPks() 和 processRefRows() 方法
+    //会进一步调用 AbstractRefAction 的权限和多语言处理逻辑。
+    protected String[] processRefPks(RefQueryInfo refQueryInfo, IRefSqlBuilder refSqlBuilder, String... strQueryRefPks) &#123;
+        return strQueryRefPks;
+    &#125;
+
+    protected RefRow[] processRefRows(RefQueryInfo refQueryInfo, IRefSqlBuilder refSqlBuilder, RefRow... refRows) &#123;
+        if (!ArrayUtils.isEmpty(refRows)) &#123;
+            for (RefRow refRow : refRows) &#123;
+                // 多语言处理
+                this.processMultiLang(refQueryInfo, refRow); 
+                this.processMultiLangForEnum(refQueryInfo, refRow);
             &#125;
-            return refRows;
         &#125;
-    
-    &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+        return refRows;
+    &#125;
+
+&#125;
+<pre class="line-numbers language-none"><code class="language-none">
+7. 1. ###   &#96;NCCAction&#96;
+
+      - &#96;NCCAction&#96; 是一个抽象基础类，定义了通用的操作流程和错误处理机制，为具体的业务逻辑类（例如参照功能类）提供支持。
+      - &#96;NCCAction&#96; 提供了执行业务操作的通用流程，并定义了 &#96;doAction()&#96; 方法，作为所有具体操作类的执行入口。在参照功能中，这个类的主要作用包括以下几方面：
+        - **标准化的操作流程**：&#96;doAction()&#96; 定义了操作执行的通用流程，包含参数获取（&#96;getPara&#96;）、预处理（&#96;doBeforeAction&#96;）、实际执行（&#96;execute&#96;）、后处理（&#96;doAfterSuccess&#96;）和异常处理（&#96;handleException&#96;）。
+        - **权限校验**：&#96;checkDataPermission()&#96; 方法用于数据权限校验，确保只有符合权限的数据可以被访问。
+        - **异常处理**：&#96;handleException()&#96; 和 &#96;handleBusinessException()&#96; 处理不同类型的异常，确保系统稳定运行，并将合适的错误信息返回给用户。
+
+8. &#96;&#96;&#96;Java
+   &#x2F;&#x2F; NCCAction 是一个抽象类，提供了处理 Web 请求的标准化流程。
+   &#x2F;&#x2F;该类实现了一个ICommonAction接口，包含请求参数处理、操作执行和异常处理等核心逻辑
+   public abstract class NCCAction implements ICommonAction &#123;
+       &#x2F;&#x2F;用来存储操作码
+       private String strMdOperateCode &#x3D; null;
+       private String strOperateCode &#x3D; null;
+       private String strResourceCode &#x3D; null;
+   
+       &#x2F;&#x2F;默认构造函数
+       public NCCAction() &#123;
+       &#125;
+   
+       &#x2F;&#x2F;检查数据权限，确保用户可以执行该操作
+       protected void checkDataPermission(IRequest request, Object objData) throws Exception &#123;
+           DataPermissionAction dataPermissionAction &#x3D; new DataPermissionAction();
+           ValidationException validException &#x3D; dataPermissionAction.checkDataPermission(this.getResourceCode(), this.getMdOperateCode(), this.getOperateCode(), objData);
+           dataPermissionAction.dealValidationException(validException);
+       &#125;
+   
+       &#x2F;&#x2F;核心方法，处理请求，执行制定操作
+       public final Object doAction(IRequest request) &#123;
+           Logger.debug(&quot;begin action--&gt;&quot; + this.getClass().getName() + &quot;.doAction()&quot;);
+           Object para &#x3D; null;&#x2F;&#x2F;存储解析后的请求参数
+           Object result &#x3D; null;&#x2F;&#x2F;存储操作执行后的结果
+   
+           try &#123;
+               &#x2F;&#x2F;获取请求参数
+               para &#x3D; this.getPara(request, this.getParaClass());
+               if (!this.doBeforeAction(request, para)) &#123;
+                   &#x2F;&#x2F;执行前的预处理，如果失败就返回
+                   Object var10 &#x3D; result;
+                   return var10;
+               &#125;
+   
+               &#x2F;&#x2F;执行核心逻辑
+               result &#x3D; this.execute(request, para);
+               this.doAfterSuccess(request, para);
+           &#125; catch (Exception var8) &#123;
+               Exception ex &#x3D; var8;
+               this.doAfterFailure(request, para);&#x2F;&#x2F;操作失败后的处理
+               this.handleException(ex);&#x2F;&#x2F;异常处理
+           &#125; finally &#123;
+               Logger.debug(&quot;end action--&gt;&quot; + this.getClass().getName() + &quot;.doAction()&quot;);
+           &#125;
+   
+           return result;&#x2F;&#x2F;返回执行结果
+       &#125;
+   
+       &#x2F;&#x2F;在操作失败后，提供子类重写
+       protected &lt;T&gt; void doAfterFailure(IRequest request, T para) &#123;
+       &#125;
+   
+       &#x2F;&#x2F;在操作成功后，提供子类重写
+       protected &lt;T&gt; void doAfterSuccess(IRequest request, T para) throws Exception &#123;
+       &#125;
+   
+       &#x2F;&#x2F;操作执行前的预处理，默认返回值true，允许操作执行，子类可重写
+       protected &lt;T&gt; boolean doBeforeAction(IRequest request, T para) throws Exception &#123;
+           return true;
+       &#125;
+   
+       &#x2F;&#x2F;抽象方法，子类必须实现这个方法用于定义具体操作的执行逻辑
+       public abstract &lt;T&gt; Object execute(IRequest var1, T var2) throws Exception;
+       
+       &#x2F;&#x2F;getter方法
+       &#x2F;&#x2F;获取 MdOperateCode
+       public final String getMdOperateCode() &#123;
+           return this.strMdOperateCode;
+       &#125;
+   
+       &#x2F;&#x2F; 获取 OperateCode
+       public final String getOperateCode() &#123;
+           return this.strOperateCode;
+       &#125;
+   
+       &#x2F;&#x2F; 从请求中获取参数并转换为指定类型的对象
+       public &lt;T&gt; T getPara(IRequest request, Class paraClass) &#123;
+           String strRead &#x3D; request.read();
+           T para &#x3D; JsonFactory.create().fromJson(strRead, paraClass);
+           return para;
+       &#125;
+   
+        &#x2F;&#x2F; 获取参数类型，默认返回 HashMap.class
+       protected Class getParaClass() &#123;
+           return HashMap.class;
+       &#125;
+   
+        &#x2F;&#x2F; 获取 ResourceCode
+       public final String getResourceCode() &#123;
+           return this.strResourceCode;
+       &#125;
+   
+       &#x2F;&#x2F; 处理业务异常，根据不同类型的异常返回相应的错误信息
+       protected void handleBusinessException(BusinessException ex) &#123;
+           String strMsg &#x3D; null;
+           if (ex instanceof BizLockFailedException) &#123;
+               strMsg &#x3D; NCLangRes4VoTransl.getNCLangRes().getStrByID(&quot;uif2&quot;, &quot;DefaultExceptionHanler-000004&quot;);
+           &#125; else if (ex instanceof LockFailedException) &#123;
+               strMsg &#x3D; NCLangRes4VoTransl.getNCLangRes().getStrByID(&quot;uif2&quot;, &quot;DefaultExceptionHanler-000000&quot;);
+           &#125; else if (ex instanceof ValidationException) &#123;
+               strMsg &#x3D; ((ValidationException)ex).getMessage();
+           &#125; else if (ex instanceof VersionConflictException) &#123;
+               strMsg &#x3D; NCLangRes4VoTransl.getNCLangRes().getStrByID(&quot;uif2&quot;, &quot;DefaultExceptionHanler-000002&quot;);
+           &#125; else &#123;
+               strMsg &#x3D; ex.getMessage();
+           &#125;
+   
+           ExceptionUtils.wrapBusinessException(strMsg);
+       &#125;
+   
+       &#x2F;&#x2F;处理不同类型的异常
+       protected void handleException(Exception ex) &#123;
+           Throwable ex2 &#x3D; ExceptionUtils.unmarsh(ex);
+           Logger.error(&quot;**************************************************** NCCAction Error ****************************************************&quot;);
+           Logger.error(ex2.getMessage(), ex);
+           if (ex2 instanceof RuntimeException) &#123;
+               this.handleRuntimeException((RuntimeException)ex2);
+           &#125; else if (ex2 instanceof BusinessException) &#123;
+               this.handleBusinessException((BusinessException)ex2);
+           &#125; else &#123;
+               this.handleUnknownException(ex2);
+           &#125;
+   
+       &#125;
+       
+       &#x2F;&#x2F;处理运行时异常
+       protected void handleRuntimeException(RuntimeException ex) &#123;
+           if (ex instanceof FrameworkSecurityException) &#123;
+               ExceptionUtils.wrapBusinessException(NCLangRes4VoTransl.getNCLangRes().getStrByID(&quot;uif2&quot;, &quot;DefaultExceptionHanler-000006&quot;));
+           &#125; else if (ex instanceof BusinessExceptionAdapter) &#123;
+               this.handleBusinessException(((BusinessExceptionAdapter)ex).originalException);
+           &#125; else if (!(ex instanceof nccloud.base.exception.BusinessException) &amp;&amp; !(ex instanceof nccloud.framework.core.exception.BusinessException)) &#123;
+               this.handleUnknownException(ex);
+           &#125; else &#123;
+               this.handleUnknownException(ex);
+           &#125;
+   
+       &#125;
+       
+       &#x2F;&#x2F;处理未知异常
+       protected void handleUnknownException(Throwable ex) &#123;
+           String strMsg &#x3D; ex.getMessage();
+           if (StringUtils.isBlank(strMsg)) &#123;
+               strMsg &#x3D; NCLangRes4VoTransl.getNCLangRes().getStrByID(&quot;uif2&quot;, &quot;DefaultExceptionHanler-000001&quot;);
+           &#125;
+   
+           BusinessException business &#x3D; new BusinessException(strMsg);
+           business.setStackTrace(ex.getStackTrace());
+           ExceptionUtils.wrapException(business);
+       &#125;
+   
+       &#x2F;&#x2F;setter方法
+       public void setMdOperateCode(String mdOperateCode) &#123;
+           this.strMdOperateCode &#x3D; mdOperateCode;
+       &#125;
+   
+       public void setOperateCode(String operateCode) &#123;
+           this.strOperateCode &#x3D; operateCode;
+       &#125;
+   
+       public void setResourceCode(String resourceCode) &#123;
+           this.strResourceCode &#x3D; resourceCode;
+       &#125;
+   &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </code></pre>
 </li>
-<li><h3 id="NCCAction"><a href="#NCCAction" class="headerlink" title="NCCAction"></a><code>NCCAction</code></h3></li>
-<li><ul>
-<li><code>NCCAction</code> 是一个抽象基础类，定义了通用的操作流程和错误处理机制，为具体的业务逻辑类（例如参照功能类）提供支持。</li>
-<li><code>NCCAction</code> 提供了执行业务操作的通用流程，并定义了 <code>doAction()</code> 方法，作为所有具体操作类的执行入口。在参照功能中，这个类的主要作用包括以下几方面：<ul>
-<li><strong>标准化的操作流程</strong>：<code>doAction()</code> 定义了操作执行的通用流程，包含参数获取（<code>getPara</code>）、预处理（<code>doBeforeAction</code>）、实际执行（<code>execute</code>）、后处理（<code>doAfterSuccess</code>）和异常处理（<code>handleException</code>）。</li>
-<li><strong>权限校验</strong>：<code>checkDataPermission()</code> 方法用于数据权限校验，确保只有符合权限的数据可以被访问。</li>
-<li><strong>异常处理</strong>：<code>handleException()</code> 和 <code>handleBusinessException()</code> 处理不同类型的异常，确保系统稳定运行，并将合适的错误信息返回给用户。</li>
-</ul>
+<li><ol>
+<li><h3 id="NCGridRefDBProcessor"><a href="#NCGridRefDBProcessor" class="headerlink" title="NCGridRefDBProcessor"></a><code>NCGridRefDBProcessor</code></h3></li>
+</ol>
 </li>
-</ul>
-</li>
-<li><pre><code class="Java">// NCCAction 是一个抽象类，提供了处理 Web 请求的标准化流程。
-//该类实现了一个ICommonAction接口，包含请求参数处理、操作执行和异常处理等核心逻辑
-public abstract class NCCAction implements ICommonAction &#123;
-    //用来存储操作码
-    private String strMdOperateCode = null;
-    private String strOperateCode = null;
-    private String strResourceCode = null;
-
-    //默认构造函数
-    public NCCAction() &#123;
+<li><p><code>NCGridRefDBProcessor</code>  是参照功能中具体负责执行数据库操作的核心类，它处理参照数据的查询、结果处理等功能。</p>
+<ul>
+<li>这个类的主要任务是通过与 <code>RefMeta</code> 和 <code>RefQueryInfo</code> 协作，生成 SQL 查询语句并执行它，最终返回参照数据。这类的主要方法包括 <code>queryRefPks()</code>、<code>getRowsByPks()</code> 和 <code>constructResult()</code></li>
+<li><pre><code class="Java">//根据用户输入的查询条件（如关键字、过滤条件等），生成查询主键的 SQL 语句并执行，返回符合条件的主键数组。
+@Override
+public String[] queryRefPks(RefQueryInfo para) &#123;
+  this.refQueryInfo = para;
+  PageInfo page = para.getPageInfo();
+  String[] pks = null;
+  // 判断是否进行全文检索
+  // 如果需要全文检索,通过 qryByFulltxt()方法生成基于关键字的查询结果。
+  if (this.getFulTxtFlg(para)) &#123;
+    pks = this.qryByFulltxt(para);
+  &#125;
+  // 非全文检索
+  else &#123;
+    // 系统会根据分页信息来决定是查询所有主键（调用 queryAll()）,
+    // 还是根据分页信息分段查询（调用 queryByPage()）。
+    // 当前页码为-1时查全部数据
+    if (page.getPageIndex() == -1) &#123;
+      pks = this.queryAll(para);
     &#125;
-
-    //检查数据权限，确保用户可以执行该操作
-    protected void checkDataPermission(IRequest request, Object objData) throws Exception &#123;
-        DataPermissionAction dataPermissionAction = new DataPermissionAction();
-        ValidationException validException = dataPermissionAction.checkDataPermission(this.getResourceCode(), this.getMdOperateCode(), this.getOperateCode(), objData);
-        dataPermissionAction.dealValidationException(validException);
+    else &#123;
+      // 根据分页信息分段查询
+      pks = this.queryByPage(para, page);
     &#125;
+  &#125;
+  return pks; // 返回查询到的主键
+&#125;
 
-    //核心方法，处理请求，执行制定操作
-    public final Object doAction(IRequest request) &#123;
-        Logger.debug(&quot;begin action--&gt;&quot; + this.getClass().getName() + &quot;.doAction()&quot;);
-        Object para = null;//存储解析后的请求参数
-        Object result = null;//存储操作执行后的结果
 
-        try &#123;
-            //获取请求参数
-            para = this.getPara(request, this.getParaClass());
-            if (!this.doBeforeAction(request, para)) &#123;
-                //执行前的预处理，如果失败就返回
-                Object var10 = result;
-                return var10;
-            &#125;
+public void setMaxRows(int maxRows) &#123;
+  this.maxRows = maxRows; // 设置最大行数
+&#125;
 
-            //执行核心逻辑
-            result = this.execute(request, para);
-            this.doAfterSuccess(request, para);
-        &#125; catch (Exception var8) &#123;
-            Exception ex = var8;
-            this.doAfterFailure(request, para);//操作失败后的处理
-            this.handleException(ex);//异常处理
-        &#125; finally &#123;
-            Logger.debug(&quot;end action--&gt;&quot; + this.getClass().getName() + &quot;.doAction()&quot;);
+// 生成查询主键的 SQL 语句，用于从数据库中获取符合条件的主键数据。
+// 根据 RefMeta 中定义的表名和主键字段，生成基础 SQL 查询。
+// 如果查询条件中有搜索主键（SearchPks），系统会根据主键来过滤。
+// getWhereSql() 和 getOrderSql() 方法分别用于生成 WHERE 条件和 ORDER BY 排序。
+
+//  RefMeta（参照数据结构定义）和 RefQueryInfo（用户查询条件）
+public String getQueryIDSql(RefQueryInfo para) &#123;
+    this.refQueryInfo = para;    
+    // 构建基础 SQL 查询
+    StringBuilder sb = new StringBuilder();
+    // this.refMeta.getPkField() 参照主键
+    // this.refMeta.getTableName() 参照表名
+    sb.append(&quot; select &quot;).append(this.refMeta.getPkField()).append(&quot; from &quot;).append(this.refMeta.getTableName());
+    sb.append(&quot; where 1 = 1 &quot;);
+    // 如果有搜索主键，添加过滤条件
+    if (para.getSearchPks() != null &amp;&amp; para.getSearchPks().length &gt; 0) &#123;
+        sb.append(&quot; and &quot;).append(this.refMeta.getPkField()).append(&quot; in (&quot;);
+        for (String pk : para.getSearchPks()) &#123;
+            sb.append(&quot;&#39;&quot;).append(pk).append(&quot;&#39;,&quot;);
         &#125;
+        sb.deleteCharAt(sb.length() - 1); // 删除最后一个逗号
+        sb.append(&quot;)&quot;);
+    &#125;  
+    // 生成 WHERE 条件和排序条件
+    sb.append(this.getWhereSql(para));
+    sb.append(this.getOrderSql(para));    
+    return sb.toString(); // 返回生成的 SQL 查询语句
+&#125;
 
-        return result;//返回执行结果
-    &#125;
 
-    //在操作失败后，提供子类重写
-    protected &lt;T&gt; void doAfterFailure(IRequest request, T para) &#123;
-    &#125;
 
-    //在操作成功后，提供子类重写
-    protected &lt;T&gt; void doAfterSuccess(IRequest request, T para) throws Exception &#123;
-    &#125;
-
-    //操作执行前的预处理，默认返回值true，允许操作执行，子类可重写
-    protected &lt;T&gt; boolean doBeforeAction(IRequest request, T para) throws Exception &#123;
-        return true;
-    &#125;
-
-    //抽象方法，子类必须实现这个方法用于定义具体操作的执行逻辑
-    public abstract &lt;T&gt; Object execute(IRequest var1, T var2) throws Exception;
+// 根据主键数组查询对应的参照数据行，并将数据封装为 RefRow[] 返回。
+// 首先根据 pks 数组构建 SQL 查询，通过 IMultiNCGridRefRowService 查询数据库中的实际数据。
+// 查询结果为 NCRefRow[] 格式，然后系统会将其转换为前端展示的 RefRow[] 格式，方便前端展示。
+public RefRow[] getRowsByPks(String[] pks) &#123;
+    // IMultiNCGridRefRowService：通过这个服务对象调用数据库.
+    // 执行根据主键过滤的 SQL 查询，并返回数据库中存储的参照数据行。
+    IMultiNCGridRefRowService service = ServiceLocator.find(IMultiNCGridRefRowService.class);
+    SqlParameterCollection collection = this.getSqlParameterCollection(this.refQueryInfo);
     
-    //getter方法
-    //获取 MdOperateCode
-    public final String getMdOperateCode() &#123;
-        return this.strMdOperateCode;
-    &#125;
-
-    // 获取 OperateCode
-    public final String getOperateCode() &#123;
-        return this.strOperateCode;
-    &#125;
-
-    // 从请求中获取参数并转换为指定类型的对象
-    public &lt;T&gt; T getPara(IRequest request, Class paraClass) &#123;
-        String strRead = request.read();
-        T para = JsonFactory.create().fromJson(strRead, paraClass);
-        return para;
-    &#125;
-
-     // 获取参数类型，默认返回 HashMap.class
-    protected Class getParaClass() &#123;
-        return HashMap.class;
-    &#125;
-
-     // 获取 ResourceCode
-    public final String getResourceCode() &#123;
-        return this.strResourceCode;
-    &#125;
-
-    // 处理业务异常，根据不同类型的异常返回相应的错误信息
-    protected void handleBusinessException(BusinessException ex) &#123;
-        String strMsg = null;
-        if (ex instanceof BizLockFailedException) &#123;
-            strMsg = NCLangRes4VoTransl.getNCLangRes().getStrByID(&quot;uif2&quot;, &quot;DefaultExceptionHanler-000004&quot;);
-        &#125; else if (ex instanceof LockFailedException) &#123;
-            strMsg = NCLangRes4VoTransl.getNCLangRes().getStrByID(&quot;uif2&quot;, &quot;DefaultExceptionHanler-000000&quot;);
-        &#125; else if (ex instanceof ValidationException) &#123;
-            strMsg = ((ValidationException)ex).getMessage();
-        &#125; else if (ex instanceof VersionConflictException) &#123;
-            strMsg = NCLangRes4VoTransl.getNCLangRes().getStrByID(&quot;uif2&quot;, &quot;DefaultExceptionHanler-000002&quot;);
-        &#125; else &#123;
-            strMsg = ex.getMessage();
-        &#125;
-
-        ExceptionUtils.wrapBusinessException(strMsg);
-    &#125;
-
-    //处理不同类型的异常
-    protected void handleException(Exception ex) &#123;
-        Throwable ex2 = ExceptionUtils.unmarsh(ex);
-        Logger.error(&quot;**************************************************** NCCAction Error ****************************************************&quot;);
-        Logger.error(ex2.getMessage(), ex);
-        if (ex2 instanceof RuntimeException) &#123;
-            this.handleRuntimeException((RuntimeException)ex2);
-        &#125; else if (ex2 instanceof BusinessException) &#123;
-            this.handleBusinessException((BusinessException)ex2);
-        &#125; else &#123;
-            this.handleUnknownException(ex2);
-        &#125;
-
-    &#125;
+    // 根据主键查询具体的数据行,RefRow 是适合前端展示的数据格式，包含了参照的code、name、pk等信息。
+    NCRefRow[] rows = service.getRowsByPksAndWheresql(this.getMeta(), pks, this.wheresql, collection);
     
-    //处理运行时异常
-    protected void handleRuntimeException(RuntimeException ex) &#123;
-        if (ex instanceof FrameworkSecurityException) &#123;
-            ExceptionUtils.wrapBusinessException(NCLangRes4VoTransl.getNCLangRes().getStrByID(&quot;uif2&quot;, &quot;DefaultExceptionHanler-000006&quot;));
-        &#125; else if (ex instanceof BusinessExceptionAdapter) &#123;
-            this.handleBusinessException(((BusinessExceptionAdapter)ex).originalException);
-        &#125; else if (!(ex instanceof nccloud.base.exception.BusinessException) &amp;&amp; !(ex instanceof nccloud.framework.core.exception.BusinessException)) &#123;
-            this.handleUnknownException(ex);
-        &#125; else &#123;
-            this.handleUnknownException(ex);
-        &#125;
+    // 将 NCRefRow 转换为 RefRow（供前端使用的数据格式）
+    RefRow[] ret = this.convert(rows);
+    return ret;
+&#125;
 
-    &#125;
-    
-    //处理未知异常
-    protected void handleUnknownException(Throwable ex) &#123;
-        String strMsg = ex.getMessage();
-        if (StringUtils.isBlank(strMsg)) &#123;
-            strMsg = NCLangRes4VoTransl.getNCLangRes().getStrByID(&quot;uif2&quot;, &quot;DefaultExceptionHanler-000001&quot;);
-        &#125;
-
-        BusinessException business = new BusinessException(strMsg);
-        business.setStackTrace(ex.getStackTrace());
-        ExceptionUtils.wrapException(business);
-    &#125;
-
-    //setter方法
-    public void setMdOperateCode(String mdOperateCode) &#123;
-        this.strMdOperateCode = mdOperateCode;
-    &#125;
-
-    public void setOperateCode(String operateCode) &#123;
-        this.strOperateCode = operateCode;
-    &#125;
-
-    public void setResourceCode(String resourceCode) &#123;
-        this.strResourceCode = resourceCode;
-    &#125;
+// 将查询结果封装为 RefQueryResult 对象，并处理分页信息，将其返回给调用者。
+// 根据 RefRow[] 数据，计算分页信息并构建返回的结果。
+// 通过 PageInfo 来设置分页总页数和当前页的信息。
+public RefQueryResult constructResult(RefRow[] rows, RefQueryInfo para) &#123;
+  // 创建查询结果对象
+  RefQueryResult result = new RefQueryResult();
+  // 设置查询结果中的行数据
+  result.setRows(rows);
+  // 获取查询参数中的分页信息
+  PageInfo page = para.getPageInfo();
+  // 计算总页数，确保至少有一页
+  // 根据总记录数 this.total 和每页记录数 page.getPageSize() 计算总页数
+  int totalPageNum =
+      (this.total + page.getPageSize() - 1) / page.getPageSize();
+  // 设置分页信息中的总页数
+  page.setTotalPage(totalPageNum);
+  // 设置查询结果中的分页信息
+  result.setPage(page);
+  // RefQueryResult 是最终返回给调用者的数据对象，它包含了查询的行数据（RefRow[]）以及分页信息（PageInfo）。
+  return result;
 &#125;
 </code></pre>
 </li>
+</ul>
+</li>
+<li></li>
 <li><p>整个参照流程包括前端发送查询条件、后端接收和解析条件、生成 SQL 查询并执行数据库查询、数据权限和多语言处理、最终将结果返回前端并展示。在这一过程中，涉及多类协同工作，确保查询高效、灵活，同时满足权限和多语言需求。</p>
 </li>
 <li><h1 id="具体流程"><a href="#具体流程" class="headerlink" title="具体流程"></a>具体流程</h1></li>
@@ -1332,6 +1446,8 @@ public abstract class NCCAction implements ICommonAction &#123;
 </ol>
 </li>
 </ol>
+</li>
+</ol>
 </article><div class="post-copyright"><div class="copyright-cc-box"><i class="anzhiyufont anzhiyu-icon-copyright"></i></div><div class="post-copyright__author_box"><a class="post-copyright__author_img" href="/" title="头像"><img class="post-copyright__author_img_back" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2024/10/30/6721f27f99464.jpg" title="头像" alt="头像"><img class="post-copyright__author_img_front" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2024/10/30/6721f27f99464.jpg" title="头像" alt="头像"></a><div class="post-copyright__author_name">黄文胜</div><div class="post-copyright__author_desc">热爱无边，生活有度</div></div><div class="post-copyright__post__info"><a class="post-copyright__original" title="该文章为原创文章，注意版权协议" href="https://hws02.github.io/2024/10/23/NCC%E6%9E%B6%E6%9E%84%E5%8F%82%E7%85%A7%E5%BC%80%E5%8F%91%E6%BA%90%E7%A0%81%E5%AE%9E%E7%8E%B0-%E7%94%A8%E5%8F%8B%E5%AE%9E%E4%B9%A0/">原创</a><a class="post-copyright-title"><span onclick="rm.copyPageUrl('https://hws02.github.io/2024/10/23/NCC%E6%9E%B6%E6%9E%84%E5%8F%82%E7%85%A7%E5%BC%80%E5%8F%91%E6%BA%90%E7%A0%81%E5%AE%9E%E7%8E%B0-%E7%94%A8%E5%8F%8B%E5%AE%9E%E4%B9%A0/')">NCC架构参照开发源码实现</span></a></div><div class="post-tools" id="post-tools"><div class="post-tools-left"><div class="rewardLeftButton"></div><div class="shareRight"><div class="share-link mobile"><div class="share-qrcode"><div class="share-button" title="使用手机访问这篇文章"><i class="anzhiyufont anzhiyu-icon-qrcode"></i></div><div class="share-main"><div class="share-main-all"><div id="qrcode" title="https://hws02.github.io/2024/10/23/NCC%E6%9E%B6%E6%9E%84%E5%8F%82%E7%85%A7%E5%BC%80%E5%8F%91%E6%BA%90%E7%A0%81%E5%AE%9E%E7%8E%B0-%E7%94%A8%E5%8F%8B%E5%AE%9E%E4%B9%A0/"></div><div class="reward-dec">使用手机访问这篇文章</div></div></div></div></div><div class="share-link weibo"><a class="share-button" target="_blank" href="https://service.weibo.com/share/share.php?title=NCC架构参照开发源码实现&amp;url=https://hws02.github.io/2024/10/23/NCC%E6%9E%B6%E6%9E%84%E5%8F%82%E7%85%A7%E5%BC%80%E5%8F%91%E6%BA%90%E7%A0%81%E5%AE%9E%E7%8E%B0-%E7%94%A8%E5%8F%8B%E5%AE%9E%E4%B9%A0/&amp;pic=https://bu.dusays.com/2024/10/31/6722d69dc007a.jpg" rel="external nofollow noreferrer noopener"><i class="anzhiyufont anzhiyu-icon-weibo"></i></a></div><script>function copyCurrentPageUrl() {
   var currentPageUrl = window.location.href;
   var input = document.createElement("input");
@@ -1341,7 +1457,7 @@ public abstract class NCCAction implements ICommonAction &#123;
   input.setSelectionRange(0, 99999);
   document.execCommand("copy");
   document.body.removeChild(input);
-}</script><div class="share-link copyurl"><div class="share-button" id="post-share-url" title="复制链接" onclick="copyCurrentPageUrl()"><i class="anzhiyufont anzhiyu-icon-link"></i></div></div></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://Hws02.github.io" target="_blank">首页</a>！</span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__box"><div class="post-meta__box__tag-list"><a class="post-meta__box__tags" href="/tags/%E5%8F%82%E7%85%A7/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>参照<span class="tagsPageCount">1</span></a><a class="post-meta__box__tags" href="/tags/%E7%94%A8%E5%8F%8B/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>用友<span class="tagsPageCount">2</span></a><a class="post-meta__box__tags" href="/tags/%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>源码研究<span class="tagsPageCount">1</span></a></div></div></div><div class="post_share"><div class="social-share" data-image="https://bu.dusays.com/2024/10/31/6722d71d6928b.jpg" data-sites="wechat,qq"></div><link rel="stylesheet" href="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"/><script src="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer="defer"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/10/23/%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91/"><img class="prev-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2024/10/31/672334e540319.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">接口开发</div></div></a></div><div class="next-post pull-right"><a href="/2024/10/25/%E6%9C%AC%E5%9C%B0%E7%BC%93%E5%AD%98%E5%92%8C%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2024/10/31/67233535eb13e.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">本地缓存和分布式缓存</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="anzhiyufont anzhiyu-icon-thumbs-up fa-fw" style="font-size: 1.5rem; margin-right: 4px"></i><span>喜欢这篇文章的人也看了</span></div><div class="relatedPosts-list"><div><a href="/2024/10/23/%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91/" title="接口开发"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2024/10/31/672334e540319.png" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2024-10-23</div><div class="title">接口开发</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="anzhiyufont anzhiyu-icon-comments"></i><span> 评论</span></div><div class="comment-randomInfo"><a onclick="anzhiyu.addRandomCommentInfo()" href="javascript:void(0)">匿名评论</a><a href="/privacy" style="margin-left: 4px">隐私政策</a></div><div class="comment-switch"><span class="first-comment">Twikoo</span><span id="switch-btn"></span><span class="second-comment">Waline</span></div><div class="comment-tips" id="comment-tips"><span>✅ 你无需删除空行，直接评论以获取最佳展示效果</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div><div><div id="waline-wrap"></div></div></div></div><div class="comment-barrage"></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="author-info__sayhi" id="author-info__sayhi" onclick="anzhiyu.changeSayHelloText()"></div><div class="author-info-avatar"><img class="avatar-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2024/10/30/6721f27f99464.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-status"><img class="g-status" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2021/01/15/4de65f92aefbf.gif" alt="status"/></div></div><div class="author-info__description">黄文胜的个人博客，记录Java牛马的学习笔记，成长历程。</div><div class="author-info__bottom-group"><a class="author-info__bottom-group-left" href="/"><h1 class="author-info__name">黄文胜</h1><div class="author-info__desc">热爱无边，生活有度</div></a><div class="card-info-social-icons is-center"><a class="social-icon faa-parent animated-hover" href="tencent://Message/?Uin=1617891783&amp;amp;websiteName=local.edu.com:8888=&amp;amp;Menu=yes" target="_blank" title="QQ"><i class="anzhiyufont anzhiyu-icon-qq"></i></a><a class="social-icon faa-parent animated-hover" href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&amp;email=huangws2024@foxmail.com" target="_blank" title="Email"><i class="anzhiyufont anzhiyu-icon-envelope"></i></a></div></div></div></div><div class="card-widget anzhiyu-right-widget" id="card-wechat" onclick="null"><div id="flip-wrapper"><div id="flip-content"><div class="face" style="background: url(https://bu.dusays.com/2023/01/13/63c02edf44033.png) center center / 100% no-repeat"></div><div class="back face" style="background: url(https://bu.dusays.com/2023/05/13/645fa415e8694.png) center center / 100% no-repeat"></div></div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bars"></i><span>文章目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#NCC%E6%9E%B6%E6%9E%84%E5%8F%82%E7%85%A7%E5%BC%80%E5%8F%91%E6%BA%90%E7%A0%81%E5%AE%9E%E7%8E%B0-%E7%94%A8%E5%8F%8B%E5%AE%9E%E4%B9%A0"><span class="toc-number">1.</span> <span class="toc-text">NCC架构参照开发源码实现 - 用友实习</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%8F%82%E7%85%A7"><span class="toc-number">1.1.</span> <span class="toc-text">1. 参照</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%8F%82%E7%85%A7%E7%9A%84%E4%B8%9A%E5%8A%A1%E5%9C%BA%E6%99%AF"><span class="toc-number">1.2.</span> <span class="toc-text">使用参照的业务场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E7%85%A7%E5%88%86%E7%B1%BB"><span class="toc-number">1.3.</span> <span class="toc-text">参照分类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%A8%E5%9E%8B%E5%8F%82%E7%85%A7"><span class="toc-number">1.3.1.</span> <span class="toc-text">表型参照</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%97%E8%A1%A8%E5%8F%82%E7%85%A7"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">列表参照</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%95%E9%80%89%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">单选模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E9%80%89%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">多选模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%91%E8%A1%A8%E5%9E%8B%E5%8F%82%E7%85%A7"><span class="toc-number">1.3.1.4.</span> <span class="toc-text">树表型参照</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%8F%82%E7%85%A7%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-number">1.3.2.</span> <span class="toc-text">4. 参照的实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A0%94%E7%A9%B6"><span class="toc-number">1.3.3.</span> <span class="toc-text">代码研究</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E7%85%A7%E5%89%8D%E7%AB%AF"><span class="toc-number">1.3.4.</span> <span class="toc-text">参照前端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#YonBIP%E5%8F%82%E7%85%A7%E5%88%9B%E5%BB%BA%EF%BC%88%E5%BA%94%E7%94%A8%E6%B3%A8%E5%86%8C%EF%BC%89"><span class="toc-number">1.3.5.</span> <span class="toc-text">YonBIP参照创建（应用注册）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%B2%E8%A7%A3%E6%80%9D%E8%B7%AF"><span class="toc-number">1.3.6.</span> <span class="toc-text">讲解思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="toc-number">1.3.7.</span> <span class="toc-text">具体思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E7%85%A7%E5%88%9B%E5%BB%BA%EF%BC%88%E9%80%9A%E8%BF%87%E5%BA%94%E7%94%A8%E6%B3%A8%E5%86%8C%E6%B7%BB%E5%8A%A0%E6%96%B0%E5%8F%82%E7%85%A7%EF%BC%89"><span class="toc-number">1.3.8.</span> <span class="toc-text">参照创建（通过应用注册添加新参照）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E7%85%A7%E5%89%8D%E7%AB%AF%EF%BC%88React%EF%BC%89"><span class="toc-number">1.3.9.</span> <span class="toc-text">参照前端（React）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E7%85%A7%E5%90%8E%E7%AB%AF%EF%BC%88Java%EF%BC%89-MVC%E6%A8%A1%E5%BC%8F%E8%AE%B2%E8%A7%A3"><span class="toc-number">1.3.10.</span> <span class="toc-text">参照后端（Java）-MVC模式讲解</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-Tax-hws-serviceDefaultGridRefAction-%E5%8F%82%E7%85%A7%E7%B1%BB"><span class="toc-number">1.3.10.1.</span> <span class="toc-text">1. Tax_hws_serviceDefaultGridRefAction 参照类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#RefMeta-%E5%AD%98%E5%82%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.3.10.2.</span> <span class="toc-text">RefMeta 存储的数据示例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DefaultGridRefAction"><span class="toc-number">1.3.11.</span> <span class="toc-text">DefaultGridRefAction</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NCCAction"><span class="toc-number">1.3.12.</span> <span class="toc-text">NCCAction</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">具体流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%89%8D%E7%AB%AF%E8%AF%B7%E6%B1%82%E9%98%B6%E6%AE%B5"><span class="toc-number">2.0.1.</span> <span class="toc-text">1. 前端请求阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%90%8E%E7%AB%AF%E6%8E%A5%E6%94%B6%E8%AF%B7%E6%B1%82%E5%B9%B6%E5%88%9D%E5%A7%8B%E5%8C%96%E6%9F%A5%E8%AF%A2"><span class="toc-number">2.0.2.</span> <span class="toc-text">2. 后端接收请求并初始化查询</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-NCCAction-doAction-%E4%BD%9C%E4%B8%BA%E6%93%8D%E4%BD%9C%E5%85%A5%E5%8F%A3"><span class="toc-number">2.0.2.1.</span> <span class="toc-text">2.1 NCCAction.doAction() 作为操作入口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-%E6%89%A7%E8%A1%8C-AbstractRefAction-execute-%E5%A4%84%E7%90%86%E6%9F%A5%E8%AF%A2%E6%9D%A1%E4%BB%B6"><span class="toc-number">2.0.2.2.</span> <span class="toc-text">2.2 执行 AbstractRefAction.execute() 处理查询条件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%95%B0%E6%8D%AE%E6%9F%A5%E8%AF%A2%E5%92%8C%E5%A4%84%E7%90%86%E9%98%B6%E6%AE%B5"><span class="toc-number">2.0.3.</span> <span class="toc-text">3. 数据查询和处理阶段</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-DefaultGridRefAction-processData-%E7%94%9F%E6%88%90%E6%9F%A5%E8%AF%A2-SQL"><span class="toc-number">2.0.3.1.</span> <span class="toc-text">3.1 DefaultGridRefAction.processData() 生成查询 SQL</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-NCGridRefDBProcessor-queryRefPks-%E6%9F%A5%E8%AF%A2%E7%AC%A6%E5%90%88%E6%9D%A1%E4%BB%B6%E7%9A%84%E4%B8%BB%E9%94%AE"><span class="toc-number">2.0.3.2.</span> <span class="toc-text">3.2 NCGridRefDBProcessor.queryRefPks() 查询符合条件的主键</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-NCGridRefDBProcessor-getRowsByPks-%E6%9F%A5%E8%AF%A2%E5%8F%82%E7%85%A7%E6%95%B0%E6%8D%AE%E8%A1%8C"><span class="toc-number">2.0.3.3.</span> <span class="toc-text">3.3 NCGridRefDBProcessor.getRowsByPks() 查询参照数据行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-NCGridRefDBProcessor-constructResult-%E5%B0%81%E8%A3%85%E7%BB%93%E6%9E%9C"><span class="toc-number">2.0.3.4.</span> <span class="toc-text">3.4 NCGridRefDBProcessor.constructResult() 封装结果</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%95%B0%E6%8D%AE%E6%9D%83%E9%99%90%E3%80%81%E5%A4%9A%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E9%98%B6%E6%AE%B5"><span class="toc-number">2.0.4.</span> <span class="toc-text">4. 数据权限、多语言处理阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C%E7%BB%99%E5%89%8D%E7%AB%AF"><span class="toc-number">2.0.5.</span> <span class="toc-text">5. 返回结果给前端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E5%89%8D%E7%AB%AF%E5%B1%95%E7%A4%BA%E7%BB%93%E6%9E%9C"><span class="toc-number">2.0.6.</span> <span class="toc-text">6. 前端展示结果</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-history"></i><span>最近发布</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/10/31/ThreadPoolExecutor/" title="ThreadPoolExecutor"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2024/10/31/6722d71d6928b.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ThreadPoolExecutor"/></a><div class="content"><a class="title" href="/2024/10/31/ThreadPoolExecutor/" title="ThreadPoolExecutor">ThreadPoolExecutor</a><time datetime="2024-10-31T07:29:12.000Z" title="发表于 2024-10-31 15:29:12">2024-10-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/29/hello-world/" title="Hello World"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2024/10/31/6722d637009ca.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2024/10/29/hello-world/" title="Hello World">Hello World</a><time datetime="2024-10-29T02:30:00.000Z" title="发表于 2024-10-29 10:30:00">2024-10-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/28/HashMap%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="HashMap底层实现原理"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2024/10/31/672334e384acb.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="HashMap底层实现原理"/></a><div class="content"><a class="title" href="/2024/10/28/HashMap%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="HashMap底层实现原理">HashMap底层实现原理</a><time datetime="2024-10-28T06:24:28.000Z" title="发表于 2024-10-28 14:24:28">2024-10-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/28/Java%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0_4_20/" title="Java基础知识"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2024/10/30/6721f435b92d2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java基础知识"/></a><div class="content"><a class="title" href="/2024/10/28/Java%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0_4_20/" title="Java基础知识">Java基础知识</a><time datetime="2024-10-28T06:24:28.000Z" title="发表于 2024-10-28 14:24:28">2024-10-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/28/Nacos/" title="nacos"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2024/10/31/6722d7671ded0.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="nacos"/></a><div class="content"><a class="title" href="/2024/10/28/Nacos/" title="nacos">nacos</a><time datetime="2024-10-28T06:24:28.000Z" title="发表于 2024-10-28 14:24:28">2024-10-28</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div id="workboard"><img class="workSituationImg boardsign" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.0.4/img/badge/安知鱼-上班摸鱼中.svg" alt="距离月入20也就还差一个大佬带我~" title="距离月入20也就还差一个大佬带我~"/><div id="runtimeTextTip"></div></div><div id="anzhiyu-footer"><div class="footer-group"><div class="footer-title">服务</div><div class="footer-links"><a class="footer-item" title="51la统计" target="_blank" rel="noopener" href="https://v6.51.la/">51la统计</a><a class="footer-item" title="十年之约" target="_blank" rel="noopener" href="https://www.foreverblog.cn/">十年之约</a><a class="footer-item" title="开往" target="_blank" rel="noopener" href="https://github.com/travellings-link/travellings">开往</a></div></div><div class="footer-group"><div class="footer-title">主题</div><div class="footer-links"><a class="footer-item" title="文档" href="/docs/">文档</a><a class="footer-item" title="源码" target="_blank" rel="noopener" href="https://github.com/anzhiyu-c/hexo-theme-anzhiyu">源码</a><a class="footer-item" title="更新日志" href="/update/">更新日志</a></div></div><div class="footer-group"><div class="footer-title">导航</div><div class="footer-links"><a class="footer-item" title="即刻短文" href="/essay/">即刻短文</a><a class="footer-item" title="友链文章" href="/fcircle/">友链文章</a><a class="footer-item" title="留言板" href="/comments/">留言板</a></div></div><div class="footer-group"><div class="footer-title">协议</div><div class="footer-links"><a class="footer-item" title="隐私协议" href="/privacy/">隐私协议</a><a class="footer-item" title="Cookies" href="/cookies/">Cookies</a><a class="footer-item" title="版权协议" href="/copyright/">版权协议</a></div></div><div class="footer-group"><div class="footer-title-group"><div class="footer-title">友链</div><a class="random-friends-btn" id="footer-random-friends-btn" href="javascript:addFriendLinksInFooter();" title="换一批友情链接"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right"></i></a></div><div class="footer-links" id="friend-links-in-footer"></div></div></div><p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v5.4.0" title="博客框架为Hexo_v5.4.0"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.1.5/img/badge/Frame-Hexo.svg" alt="博客框架为Hexo_v5.4.0"/></a><a class="github-badge" target="_blank" href="https://www.dogecloud.com/" style="margin-inline:5px" data-title="本站使用多吉云为静态资源提供CDN加速" title="本站使用多吉云为静态资源提供CDN加速"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.2.0/img/badge/CDN-多吉云-3693F3.svg" alt="本站使用多吉云为静态资源提供CDN加速"/></a><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" data-title="本站项目由Github托管" title="本站项目由Github托管"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.1.5/img/badge/Source-Github.svg" alt="本站项目由Github托管"/></a><a class="github-badge" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="margin-inline:5px" data-title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可" title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.2.0/img/badge/Copyright-BY-NC-SA.svg" alt="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"/></a></p></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2024 By <a class="footer-bar-link" href="/" title="黄文胜" target="_blank">黄文胜</a></div></div><div id="footer-type-tips"></div></div><div class="footer-bar-right"><a class="footer-bar-link" target="_blank" rel="noopener" href="https://github.com/anzhiyu-c/hexo-theme-anzhiyu" title="主题">主题</a></div></div></div></footer></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="sidebar-site-data site-data is-center"><a href="/archives/" title="archive"><div class="headline">文章</div><div class="length-num">17</div></a><a href="/tags/" title="tag"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/" title="category"><div class="headline">分类</div><div class="length-num">4</div></a></div><span class="sidebar-menu-item-title">功能</span><div class="sidebar-menu-item"><a class="darkmode_switchbutton menu-child" href="javascript:void(0);" title="显示模式"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span>显示模式</span></a></div><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">网页</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="http://localhost:4000/" title="博客"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/favicon.ico" alt="博客"/><span class="back-menu-item-text">博客</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title">项目</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://image.anheyu.com/" title="安知鱼图床"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://image.anheyu.com/favicon.ico" alt="安知鱼图床"/><span class="back-menu-item-text">安知鱼图床</span></a></div></div></div><div class="menus_items"><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/archives/"><span> 隧道</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/tags/"><span> 标签</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/categories/"><span> 分类</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/comments/"><span> 留言板</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/about/"><span> 关于本人</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="javascript:toRandomPost()"><span> 随便逛逛</span></a></div></div><span class="sidebar-menu-item-title">标签</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/Java/" style="font-size: 0.88rem;">Java<sup>10</sup></a><a href="/tags/MySQL/" style="font-size: 0.88rem;">MySQL<sup>1</sup></a><a href="/tags/Nacos/" style="font-size: 0.88rem;">Nacos<sup>1</sup></a><a href="/tags/%E5%8F%82%E7%85%A7/" style="font-size: 0.88rem;">参照<sup>1</sup></a><a href="/tags/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/" style="font-size: 0.88rem;">后端开发<sup>1</sup></a><a href="/tags/%E5%A4%A7%E5%AD%A6/" style="font-size: 0.88rem;">大学<sup>2</sup></a><a href="/tags/%E5%AD%A6%E4%B9%A0/" style="font-size: 0.88rem;">学习<sup>2</sup></a><a href="/tags/%E5%AE%9E%E4%B9%A0/" style="font-size: 0.88rem;">实习<sup>2</sup></a><a href="/tags/%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91/" style="font-size: 0.88rem;">接口开发<sup>1</sup></a><a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 0.88rem;">数据库<sup>6</sup></a><a href="/tags/%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6/" style="font-size: 0.88rem;">源码研究<sup>1</sup></a><a href="/tags/%E7%94%9F%E6%B4%BB/" style="font-size: 0.88rem;">生活<sup>1</sup></a><a href="/tags/%E7%94%A8%E5%8F%8B/" style="font-size: 0.88rem;">用友<sup>2</sup></a><a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 0.88rem;">编程<sup>2</sup></a><a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 0.88rem;">面试<sup>9</sup></a></div></div><hr/></div></div><div id="keyboard-tips"><div class="keyboardTitle">博客快捷键</div><div class="keybordList"><div class="keybordItem"><div class="keyGroup"><div class="key">shift K</div></div><div class="keyContent"><div class="content">关闭快捷键功能</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift A</div></div><div class="keyContent"><div class="content">打开/关闭中控台</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift M</div></div><div class="keyContent"><div class="content">播放/暂停音乐</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift D</div></div><div class="keyContent"><div class="content">深色/浅色显示模式</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift S</div></div><div class="keyContent"><div class="content">站内搜索</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift R</div></div><div class="keyContent"><div class="content">随机访问</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift H</div></div><div class="keyContent"><div class="content">返回首页</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift F</div></div><div class="keyContent"><div class="content">友链鱼塘</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift L</div></div><div class="keyContent"><div class="content">友链页面</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift P</div></div><div class="keyContent"><div class="content">关于本站</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift I</div></div><div class="keyContent"><div class="content">原版/本站右键菜单</div></div></div></div></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="anzhiyufont anzhiyu-icon-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="anzhiyufont anzhiyu-icon-gear"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="anzhiyufont anzhiyu-icon-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="anzhiyufont anzhiyu-icon-comments"></i></a><a id="switch-commentBarrage" href="javascript:anzhiyu.switchCommentBarrage();" title="开关弹幕"><i class="anzhiyufont anzhiyu-icon-danmu"></i></a><button id="go-up" type="button" title="回到顶部"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div><div id="nav-music"><a id="nav-music-hoverTips" onclick="anzhiyu.musicToggle()" accesskey="m">播放音乐</a><div id="console-music-bg"></div><meting-js id="8152976493" server="netease" type="playlist" mutex="true" preload="none" theme="var(--anzhiyu-main)" data-lrctype="0" order="random" volume="0.7"></meting-js></div><div id="rightMenu"><div class="rightMenu-group rightMenu-small"><div class="rightMenu-item" id="menu-backward"><i class="anzhiyufont anzhiyu-icon-arrow-left"></i></div><div class="rightMenu-item" id="menu-forward"><i class="anzhiyufont anzhiyu-icon-arrow-right"></i></div><div class="rightMenu-item" id="menu-refresh"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right" style="font-size: 1rem;"></i></div><div class="rightMenu-item" id="menu-top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></div></div><div class="rightMenu-group rightMenu-line rightMenuPlugin"><div class="rightMenu-item" id="menu-copytext"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制选中文本</span></div><div class="rightMenu-item" id="menu-pastetext"><i class="anzhiyufont anzhiyu-icon-paste"></i><span>粘贴文本</span></div><a class="rightMenu-item" id="menu-commenttext"><i class="anzhiyufont anzhiyu-icon-comment-medical"></i><span>引用到评论</span></a><div class="rightMenu-item" id="menu-newwindow"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开</span></div><div class="rightMenu-item" id="menu-copylink"><i class="anzhiyufont anzhiyu-icon-link"></i><span>复制链接地址</span></div><div class="rightMenu-item" id="menu-copyimg"><i class="anzhiyufont anzhiyu-icon-images"></i><span>复制此图片</span></div><div class="rightMenu-item" id="menu-downloadimg"><i class="anzhiyufont anzhiyu-icon-download"></i><span>下载此图片</span></div><div class="rightMenu-item" id="menu-newwindowimg"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开图片</span></div><div class="rightMenu-item" id="menu-search"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>站内搜索</span></div><div class="rightMenu-item" id="menu-searchBaidu"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>百度搜索</span></div><div class="rightMenu-item" id="menu-music-toggle"><i class="anzhiyufont anzhiyu-icon-play"></i><span>播放音乐</span></div><div class="rightMenu-item" id="menu-music-back"><i class="anzhiyufont anzhiyu-icon-backward"></i><span>切换到上一首</span></div><div class="rightMenu-item" id="menu-music-forward"><i class="anzhiyufont anzhiyu-icon-forward"></i><span>切换到下一首</span></div><div class="rightMenu-item" id="menu-music-playlist" onclick="window.open(&quot;https://y.qq.com/n/ryqq/playlist/8802438608&quot;, &quot;_blank&quot;);" style="display: none;"><i class="anzhiyufont anzhiyu-icon-radio"></i><span>查看所有歌曲</span></div><div class="rightMenu-item" id="menu-music-copyMusicName"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制歌名</span></div></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item menu-link" id="menu-randomPost"><i class="anzhiyufont anzhiyu-icon-shuffle"></i><span>随便逛逛</span></a><a class="rightMenu-item menu-link" href="/categories/"><i class="anzhiyufont anzhiyu-icon-cube"></i><span>博客分类</span></a><a class="rightMenu-item menu-link" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags"></i><span>文章标签</span></a></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item" id="menu-copy" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制地址</span></a><a class="rightMenu-item" id="menu-commentBarrage" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-message"></i><span class="menu-commentBarrage-text">关闭热评</span></a><a class="rightMenu-item" id="menu-darkmode" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span class="menu-darkmode-text">深色模式</span></a><a class="rightMenu-item" id="menu-translate" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-language"></i><span>轉為繁體</span></a></div></div><div id="rightmenu-mask"></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.umd.js"></script><script src="https://cdn.cbd.int/instant.page@5.2.0/instantpage.js" type="module"></script><script src="https://cdn.cbd.int/vanilla-lazyload@17.8.5/dist/lazyload.iife.min.js"></script><script src="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.js"></script><script>function panguFn () {
+}</script><div class="share-link copyurl"><div class="share-button" id="post-share-url" title="复制链接" onclick="copyCurrentPageUrl()"><i class="anzhiyufont anzhiyu-icon-link"></i></div></div></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://Hws02.github.io" target="_blank">首页</a>！</span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__box"><div class="post-meta__box__tag-list"><a class="post-meta__box__tags" href="/tags/%E5%8F%82%E7%85%A7/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>参照<span class="tagsPageCount">1</span></a><a class="post-meta__box__tags" href="/tags/%E7%94%A8%E5%8F%8B/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>用友<span class="tagsPageCount">2</span></a><a class="post-meta__box__tags" href="/tags/%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>源码研究<span class="tagsPageCount">1</span></a></div></div></div><div class="post_share"><div class="social-share" data-image="https://bu.dusays.com/2024/10/31/6722d71d6928b.jpg" data-sites="wechat,qq"></div><link rel="stylesheet" href="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"/><script src="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer="defer"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/10/23/%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91/"><img class="prev-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2024/10/31/672334e540319.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">接口开发</div></div></a></div><div class="next-post pull-right"><a href="/2024/10/25/%E6%9C%AC%E5%9C%B0%E7%BC%93%E5%AD%98%E5%92%8C%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2024/10/31/67233535eb13e.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">本地缓存和分布式缓存</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="anzhiyufont anzhiyu-icon-thumbs-up fa-fw" style="font-size: 1.5rem; margin-right: 4px"></i><span>喜欢这篇文章的人也看了</span></div><div class="relatedPosts-list"><div><a href="/2024/10/23/%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91/" title="接口开发"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2024/10/31/672334e540319.png" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2024-10-23</div><div class="title">接口开发</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="anzhiyufont anzhiyu-icon-comments"></i><span> 评论</span></div><div class="comment-randomInfo"><a onclick="anzhiyu.addRandomCommentInfo()" href="javascript:void(0)">匿名评论</a><a href="/privacy" style="margin-left: 4px">隐私政策</a></div><div class="comment-switch"><span class="first-comment">Twikoo</span><span id="switch-btn"></span><span class="second-comment">Waline</span></div><div class="comment-tips" id="comment-tips"><span>✅ 你无需删除空行，直接评论以获取最佳展示效果</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div><div><div id="waline-wrap"></div></div></div></div><div class="comment-barrage"></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="author-info__sayhi" id="author-info__sayhi" onclick="anzhiyu.changeSayHelloText()"></div><div class="author-info-avatar"><img class="avatar-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2024/10/30/6721f27f99464.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-status"><img class="g-status" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2021/01/15/4de65f92aefbf.gif" alt="status"/></div></div><div class="author-info__description">黄文胜的个人博客，记录Java牛马的学习笔记，成长历程。</div><div class="author-info__bottom-group"><a class="author-info__bottom-group-left" href="/"><h1 class="author-info__name">黄文胜</h1><div class="author-info__desc">热爱无边，生活有度</div></a><div class="card-info-social-icons is-center"><a class="social-icon faa-parent animated-hover" href="tencent://Message/?Uin=1617891783&amp;amp;websiteName=local.edu.com:8888=&amp;amp;Menu=yes" target="_blank" title="QQ"><i class="anzhiyufont anzhiyu-icon-qq"></i></a><a class="social-icon faa-parent animated-hover" href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&amp;email=huangws2024@foxmail.com" target="_blank" title="Email"><i class="anzhiyufont anzhiyu-icon-envelope"></i></a></div></div></div></div><div class="card-widget anzhiyu-right-widget" id="card-wechat" onclick="null"><div id="flip-wrapper"><div id="flip-content"><div class="face" style="background: url(https://bu.dusays.com/2023/01/13/63c02edf44033.png) center center / 100% no-repeat"></div><div class="back face" style="background: url(https://bu.dusays.com/2023/05/13/645fa415e8694.png) center center / 100% no-repeat"></div></div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bars"></i><span>文章目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E7%85%A7"><span class="toc-number">1.</span> <span class="toc-text">参照</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E7%85%A7%E7%9A%84%E4%B8%9A%E5%8A%A1%E5%9C%BA%E6%99%AF"><span class="toc-number">2.</span> <span class="toc-text">参照的业务场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E7%85%A7%E5%88%86%E7%B1%BB-%E6%A0%B7%E5%BC%8F%E6%88%AA%E5%9B%BE"><span class="toc-number">3.</span> <span class="toc-text">参照分类(样式截图)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%8F%82%E7%85%A7%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-number">4.</span> <span class="toc-text">4. 参照的实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A0%94%E7%A9%B6"><span class="toc-number">5.</span> <span class="toc-text">代码研究</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E7%85%A7%E5%89%8D%E7%AB%AF"><span class="toc-number">6.</span> <span class="toc-text">参照前端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#YonBIP%E5%8F%82%E7%85%A7%E5%88%9B%E5%BB%BA%EF%BC%88%E5%BA%94%E7%94%A8%E6%B3%A8%E5%86%8C%EF%BC%89"><span class="toc-number">7.</span> <span class="toc-text">YonBIP参照创建（应用注册）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%B2%E8%A7%A3%E6%80%9D%E8%B7%AF"><span class="toc-number">8.</span> <span class="toc-text">讲解思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="toc-number">9.</span> <span class="toc-text">具体思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E7%85%A7%E5%88%9B%E5%BB%BA%EF%BC%88%E9%80%9A%E8%BF%87%E5%BA%94%E7%94%A8%E6%B3%A8%E5%86%8C%E6%B7%BB%E5%8A%A0%E6%96%B0%E5%8F%82%E7%85%A7%EF%BC%89"><span class="toc-number">10.</span> <span class="toc-text">参照创建（通过应用注册添加新参照）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E7%85%A7%E5%89%8D%E7%AB%AF%EF%BC%88React%EF%BC%89"><span class="toc-number">11.</span> <span class="toc-text">参照前端（React）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E7%85%A7%E7%B1%BBTax-hws-serviceDefaultGridRefAction"><span class="toc-number">12.</span> <span class="toc-text">参照类Tax_hws_serviceDefaultGridRefAction</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DefaultGridRefAction"><span class="toc-number">13.</span> <span class="toc-text">DefaultGridRefAction</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AbstractRefAction-java"><span class="toc-number">14.</span> <span class="toc-text">AbstractRefAction.java</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NCGridRefDBProcessor"><span class="toc-number">15.</span> <span class="toc-text">NCGridRefDBProcessor</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E6%B5%81%E7%A8%8B"><span class="toc-number"></span> <span class="toc-text">具体流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%89%8D%E7%AB%AF%E8%AF%B7%E6%B1%82%E9%98%B6%E6%AE%B5"><span class="toc-number">1.</span> <span class="toc-text">1. 前端请求阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%90%8E%E7%AB%AF%E6%8E%A5%E6%94%B6%E8%AF%B7%E6%B1%82%E5%B9%B6%E5%88%9D%E5%A7%8B%E5%8C%96%E6%9F%A5%E8%AF%A2"><span class="toc-number">2.</span> <span class="toc-text">2. 后端接收请求并初始化查询</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-NCCAction-doAction-%E4%BD%9C%E4%B8%BA%E6%93%8D%E4%BD%9C%E5%85%A5%E5%8F%A3"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 NCCAction.doAction() 作为操作入口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-%E6%89%A7%E8%A1%8C-AbstractRefAction-execute-%E5%A4%84%E7%90%86%E6%9F%A5%E8%AF%A2%E6%9D%A1%E4%BB%B6"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 执行 AbstractRefAction.execute() 处理查询条件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%95%B0%E6%8D%AE%E6%9F%A5%E8%AF%A2%E5%92%8C%E5%A4%84%E7%90%86%E9%98%B6%E6%AE%B5"><span class="toc-number">3.</span> <span class="toc-text">3. 数据查询和处理阶段</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-DefaultGridRefAction-processData-%E7%94%9F%E6%88%90%E6%9F%A5%E8%AF%A2-SQL"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 DefaultGridRefAction.processData() 生成查询 SQL</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-NCGridRefDBProcessor-queryRefPks-%E6%9F%A5%E8%AF%A2%E7%AC%A6%E5%90%88%E6%9D%A1%E4%BB%B6%E7%9A%84%E4%B8%BB%E9%94%AE"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 NCGridRefDBProcessor.queryRefPks() 查询符合条件的主键</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-NCGridRefDBProcessor-getRowsByPks-%E6%9F%A5%E8%AF%A2%E5%8F%82%E7%85%A7%E6%95%B0%E6%8D%AE%E8%A1%8C"><span class="toc-number">3.3.</span> <span class="toc-text">3.3 NCGridRefDBProcessor.getRowsByPks() 查询参照数据行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-NCGridRefDBProcessor-constructResult-%E5%B0%81%E8%A3%85%E7%BB%93%E6%9E%9C"><span class="toc-number">3.4.</span> <span class="toc-text">3.4 NCGridRefDBProcessor.constructResult() 封装结果</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%95%B0%E6%8D%AE%E6%9D%83%E9%99%90%E3%80%81%E5%A4%9A%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E9%98%B6%E6%AE%B5"><span class="toc-number">4.</span> <span class="toc-text">4. 数据权限、多语言处理阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C%E7%BB%99%E5%89%8D%E7%AB%AF"><span class="toc-number">5.</span> <span class="toc-text">5. 返回结果给前端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E5%89%8D%E7%AB%AF%E5%B1%95%E7%A4%BA%E7%BB%93%E6%9E%9C"><span class="toc-number">6.</span> <span class="toc-text">6. 前端展示结果</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-history"></i><span>最近发布</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/10/31/ThreadPoolExecutor/" title="ThreadPoolExecutor"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2024/10/31/6722d71d6928b.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ThreadPoolExecutor"/></a><div class="content"><a class="title" href="/2024/10/31/ThreadPoolExecutor/" title="ThreadPoolExecutor">ThreadPoolExecutor</a><time datetime="2024-10-31T07:29:12.000Z" title="发表于 2024-10-31 15:29:12">2024-10-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/29/hello-world/" title="Hello World"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2024/10/31/6722d637009ca.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2024/10/29/hello-world/" title="Hello World">Hello World</a><time datetime="2024-10-29T02:30:00.000Z" title="发表于 2024-10-29 10:30:00">2024-10-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/28/HashMap%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="HashMap底层实现原理"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2024/10/31/672334e384acb.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="HashMap底层实现原理"/></a><div class="content"><a class="title" href="/2024/10/28/HashMap%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="HashMap底层实现原理">HashMap底层实现原理</a><time datetime="2024-10-28T06:24:28.000Z" title="发表于 2024-10-28 14:24:28">2024-10-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/28/Nacos/" title="nacos"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2024/10/31/6722d7671ded0.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="nacos"/></a><div class="content"><a class="title" href="/2024/10/28/Nacos/" title="nacos">nacos</a><time datetime="2024-10-28T06:24:28.000Z" title="发表于 2024-10-28 14:24:28">2024-10-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/28/jdbc%20%E7%AC%94%E8%AE%B0/" title="JDBC"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2024/10/30/6721f5e847085.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JDBC"/></a><div class="content"><a class="title" href="/2024/10/28/jdbc%20%E7%AC%94%E8%AE%B0/" title="JDBC">JDBC</a><time datetime="2024-10-28T06:24:28.000Z" title="发表于 2024-10-28 14:24:28">2024-10-28</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div id="workboard"><img class="workSituationImg boardsign" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.0.4/img/badge/安知鱼-上班摸鱼中.svg" alt="距离月入20也就还差一个大佬带我~" title="距离月入20也就还差一个大佬带我~"/><div id="runtimeTextTip"></div></div><div id="anzhiyu-footer"><div class="footer-group"><div class="footer-title">服务</div><div class="footer-links"><a class="footer-item" title="51la统计" target="_blank" rel="noopener" href="https://v6.51.la/">51la统计</a><a class="footer-item" title="十年之约" target="_blank" rel="noopener" href="https://www.foreverblog.cn/">十年之约</a><a class="footer-item" title="开往" target="_blank" rel="noopener" href="https://github.com/travellings-link/travellings">开往</a></div></div><div class="footer-group"><div class="footer-title">主题</div><div class="footer-links"><a class="footer-item" title="文档" href="/docs/">文档</a><a class="footer-item" title="源码" target="_blank" rel="noopener" href="https://github.com/anzhiyu-c/hexo-theme-anzhiyu">源码</a><a class="footer-item" title="更新日志" href="/update/">更新日志</a></div></div><div class="footer-group"><div class="footer-title">导航</div><div class="footer-links"><a class="footer-item" title="即刻短文" href="/essay/">即刻短文</a><a class="footer-item" title="友链文章" href="/fcircle/">友链文章</a><a class="footer-item" title="留言板" href="/comments/">留言板</a></div></div><div class="footer-group"><div class="footer-title">协议</div><div class="footer-links"><a class="footer-item" title="隐私协议" href="/privacy/">隐私协议</a><a class="footer-item" title="Cookies" href="/cookies/">Cookies</a><a class="footer-item" title="版权协议" href="/copyright/">版权协议</a></div></div><div class="footer-group"><div class="footer-title-group"><div class="footer-title">友链</div><a class="random-friends-btn" id="footer-random-friends-btn" href="javascript:addFriendLinksInFooter();" title="换一批友情链接"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right"></i></a></div><div class="footer-links" id="friend-links-in-footer"></div></div></div><p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v5.4.0" title="博客框架为Hexo_v5.4.0"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.1.5/img/badge/Frame-Hexo.svg" alt="博客框架为Hexo_v5.4.0"/></a><a class="github-badge" target="_blank" href="https://www.dogecloud.com/" style="margin-inline:5px" data-title="本站使用多吉云为静态资源提供CDN加速" title="本站使用多吉云为静态资源提供CDN加速"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.2.0/img/badge/CDN-多吉云-3693F3.svg" alt="本站使用多吉云为静态资源提供CDN加速"/></a><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" data-title="本站项目由Github托管" title="本站项目由Github托管"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.1.5/img/badge/Source-Github.svg" alt="本站项目由Github托管"/></a><a class="github-badge" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="margin-inline:5px" data-title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可" title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.2.0/img/badge/Copyright-BY-NC-SA.svg" alt="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"/></a></p></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2024 By <a class="footer-bar-link" href="/" title="黄文胜" target="_blank">黄文胜</a></div></div><div id="footer-type-tips"></div></div><div class="footer-bar-right"><a class="footer-bar-link" target="_blank" rel="noopener" href="https://github.com/anzhiyu-c/hexo-theme-anzhiyu" title="主题">主题</a></div></div></div></footer></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="sidebar-site-data site-data is-center"><a href="/archives/" title="archive"><div class="headline">文章</div><div class="length-num">16</div></a><a href="/tags/" title="tag"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/" title="category"><div class="headline">分类</div><div class="length-num">4</div></a></div><span class="sidebar-menu-item-title">功能</span><div class="sidebar-menu-item"><a class="darkmode_switchbutton menu-child" href="javascript:void(0);" title="显示模式"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span>显示模式</span></a></div><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">网页</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="http://localhost:4000/" title="博客"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/favicon.ico" alt="博客"/><span class="back-menu-item-text">博客</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title">项目</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://image.anheyu.com/" title="安知鱼图床"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://image.anheyu.com/favicon.ico" alt="安知鱼图床"/><span class="back-menu-item-text">安知鱼图床</span></a></div></div></div><div class="menus_items"><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/archives/"><span> 隧道</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/tags/"><span> 标签</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/categories/"><span> 分类</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/comments/"><span> 留言板</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/about/"><span> 关于本人</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="javascript:toRandomPost()"><span> 随便逛逛</span></a></div></div><span class="sidebar-menu-item-title">标签</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/Java/" style="font-size: 0.88rem;">Java<sup>9</sup></a><a href="/tags/MySQL/" style="font-size: 0.88rem;">MySQL<sup>1</sup></a><a href="/tags/Nacos/" style="font-size: 0.88rem;">Nacos<sup>1</sup></a><a href="/tags/%E5%8F%82%E7%85%A7/" style="font-size: 0.88rem;">参照<sup>1</sup></a><a href="/tags/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/" style="font-size: 0.88rem;">后端开发<sup>1</sup></a><a href="/tags/%E5%A4%A7%E5%AD%A6/" style="font-size: 0.88rem;">大学<sup>2</sup></a><a href="/tags/%E5%AD%A6%E4%B9%A0/" style="font-size: 0.88rem;">学习<sup>1</sup></a><a href="/tags/%E5%AE%9E%E4%B9%A0/" style="font-size: 0.88rem;">实习<sup>1</sup></a><a href="/tags/%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91/" style="font-size: 0.88rem;">接口开发<sup>1</sup></a><a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 0.88rem;">数据库<sup>5</sup></a><a href="/tags/%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6/" style="font-size: 0.88rem;">源码研究<sup>1</sup></a><a href="/tags/%E7%94%9F%E6%B4%BB/" style="font-size: 0.88rem;">生活<sup>1</sup></a><a href="/tags/%E7%94%A8%E5%8F%8B/" style="font-size: 0.88rem;">用友<sup>2</sup></a><a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 0.88rem;">编程<sup>1</sup></a><a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 0.88rem;">面试<sup>9</sup></a></div></div><hr/></div></div><div id="keyboard-tips"><div class="keyboardTitle">博客快捷键</div><div class="keybordList"><div class="keybordItem"><div class="keyGroup"><div class="key">shift K</div></div><div class="keyContent"><div class="content">关闭快捷键功能</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift A</div></div><div class="keyContent"><div class="content">打开/关闭中控台</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift M</div></div><div class="keyContent"><div class="content">播放/暂停音乐</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift D</div></div><div class="keyContent"><div class="content">深色/浅色显示模式</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift S</div></div><div class="keyContent"><div class="content">站内搜索</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift R</div></div><div class="keyContent"><div class="content">随机访问</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift H</div></div><div class="keyContent"><div class="content">返回首页</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift F</div></div><div class="keyContent"><div class="content">友链鱼塘</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift L</div></div><div class="keyContent"><div class="content">友链页面</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift P</div></div><div class="keyContent"><div class="content">关于本站</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift I</div></div><div class="keyContent"><div class="content">原版/本站右键菜单</div></div></div></div></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="anzhiyufont anzhiyu-icon-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="anzhiyufont anzhiyu-icon-gear"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="anzhiyufont anzhiyu-icon-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="anzhiyufont anzhiyu-icon-comments"></i></a><a id="switch-commentBarrage" href="javascript:anzhiyu.switchCommentBarrage();" title="开关弹幕"><i class="anzhiyufont anzhiyu-icon-danmu"></i></a><button id="go-up" type="button" title="回到顶部"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div><div id="nav-music"><a id="nav-music-hoverTips" onclick="anzhiyu.musicToggle()" accesskey="m">播放音乐</a><div id="console-music-bg"></div><meting-js id="8152976493" server="netease" type="playlist" mutex="true" preload="none" theme="var(--anzhiyu-main)" data-lrctype="0" order="random" volume="0.7"></meting-js></div><div id="rightMenu"><div class="rightMenu-group rightMenu-small"><div class="rightMenu-item" id="menu-backward"><i class="anzhiyufont anzhiyu-icon-arrow-left"></i></div><div class="rightMenu-item" id="menu-forward"><i class="anzhiyufont anzhiyu-icon-arrow-right"></i></div><div class="rightMenu-item" id="menu-refresh"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right" style="font-size: 1rem;"></i></div><div class="rightMenu-item" id="menu-top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></div></div><div class="rightMenu-group rightMenu-line rightMenuPlugin"><div class="rightMenu-item" id="menu-copytext"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制选中文本</span></div><div class="rightMenu-item" id="menu-pastetext"><i class="anzhiyufont anzhiyu-icon-paste"></i><span>粘贴文本</span></div><a class="rightMenu-item" id="menu-commenttext"><i class="anzhiyufont anzhiyu-icon-comment-medical"></i><span>引用到评论</span></a><div class="rightMenu-item" id="menu-newwindow"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开</span></div><div class="rightMenu-item" id="menu-copylink"><i class="anzhiyufont anzhiyu-icon-link"></i><span>复制链接地址</span></div><div class="rightMenu-item" id="menu-copyimg"><i class="anzhiyufont anzhiyu-icon-images"></i><span>复制此图片</span></div><div class="rightMenu-item" id="menu-downloadimg"><i class="anzhiyufont anzhiyu-icon-download"></i><span>下载此图片</span></div><div class="rightMenu-item" id="menu-newwindowimg"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开图片</span></div><div class="rightMenu-item" id="menu-search"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>站内搜索</span></div><div class="rightMenu-item" id="menu-searchBaidu"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>百度搜索</span></div><div class="rightMenu-item" id="menu-music-toggle"><i class="anzhiyufont anzhiyu-icon-play"></i><span>播放音乐</span></div><div class="rightMenu-item" id="menu-music-back"><i class="anzhiyufont anzhiyu-icon-backward"></i><span>切换到上一首</span></div><div class="rightMenu-item" id="menu-music-forward"><i class="anzhiyufont anzhiyu-icon-forward"></i><span>切换到下一首</span></div><div class="rightMenu-item" id="menu-music-playlist" onclick="window.open(&quot;https://y.qq.com/n/ryqq/playlist/8802438608&quot;, &quot;_blank&quot;);" style="display: none;"><i class="anzhiyufont anzhiyu-icon-radio"></i><span>查看所有歌曲</span></div><div class="rightMenu-item" id="menu-music-copyMusicName"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制歌名</span></div></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item menu-link" id="menu-randomPost"><i class="anzhiyufont anzhiyu-icon-shuffle"></i><span>随便逛逛</span></a><a class="rightMenu-item menu-link" href="/categories/"><i class="anzhiyufont anzhiyu-icon-cube"></i><span>博客分类</span></a><a class="rightMenu-item menu-link" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags"></i><span>文章标签</span></a></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item" id="menu-copy" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制地址</span></a><a class="rightMenu-item" id="menu-commentBarrage" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-message"></i><span class="menu-commentBarrage-text">关闭热评</span></a><a class="rightMenu-item" id="menu-darkmode" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span class="menu-darkmode-text">深色模式</span></a><a class="rightMenu-item" id="menu-translate" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-language"></i><span>轉為繁體</span></a></div></div><div id="rightmenu-mask"></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.umd.js"></script><script src="https://cdn.cbd.int/instant.page@5.2.0/instantpage.js" type="module"></script><script src="https://cdn.cbd.int/vanilla-lazyload@17.8.5/dist/lazyload.iife.min.js"></script><script src="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.js"></script><script>function panguFn () {
   if (typeof pangu === 'object') pangu.autoSpacingPage()
   else {
     getScript('https://cdn.cbd.int/pangu@4.0.7/dist/browser/pangu.min.js')
@@ -1664,7 +1780,7 @@ queueMicrotask(() => {
 
   newestCommentInit()
   document.addEventListener('pjax:complete', newestCommentInit)
-})</script><script async data-pjax src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.1/bubble/bubble.js"></script><script>var visitorMail = "huangws2024@foxmail.com";
+})</script><script async data-pjax src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.1/bubble/bubble.js"></script><script>var visitorMail = "visitor@blog.com";
 </script><script async data-pjax src="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/waterfall/waterfall.js"></script><script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/qrcodejs/1.0.0/qrcode.min.js"></script><script src="/js/anzhiyu/right_click_menu.js"></script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.9/icon/ali_iconfont_css.css"><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/aplayer/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.cbd.int/anzhiyu-blog-static@1.0.1/js/APlayer.min.js"></script><script src="https://cdn.cbd.int/hexo-anzhiyu-music@1.0.1/assets/js/Meting2.min.js"></script><script src="https://cdn.cbd.int/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","meta[property=\"og:type\"]","meta[property=\"og:site_name\"]","meta[property=\"og:description\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
 var pjax = new Pjax({
   elements: 'a:not([target="_blank"])',
